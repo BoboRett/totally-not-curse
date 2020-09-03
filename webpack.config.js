@@ -1,3 +1,4 @@
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
@@ -54,6 +55,11 @@ module.exports = (env, argv) => {
             filename: prod ? '[name].[chunkhash:8].js' : '[name].js'
         },
         plugins: [
+            new CopyWebpackPlugin({
+                patterns: [
+                    { from: 'public/*.js', flatten: true }
+                ]
+            }),
             new HtmlWebpackPlugin({
                 inject: 'head',
                 template: path.resolve(__dirname, './public/index.html')

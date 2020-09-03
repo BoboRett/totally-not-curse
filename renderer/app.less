@@ -27,3 +27,67 @@ body {
     display: flex;
     flex-direction: column;
 }
+
+.titlebar {
+    display: flex;
+    align-items: center;
+    background-color: #0000000f;
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+
+    &__window-title {
+        margin-left: 4px;
+        color: grey;
+    }
+
+    &__window-action {
+        justify-self: flex-end;
+        width: 40px;
+        height: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: grey;
+        cursor: pointer;
+        -webkit-app-region: no-drag;
+
+        &:before {
+            content: '';
+            font-family: FontAwesome;
+        }
+
+        &_minimise {
+            margin-left: auto;
+
+            &:before {
+                content: '\f2d1';
+            }
+        }
+
+        &_maximise {
+            &:before {
+                content: '\f2d0';
+            }
+        }
+
+        &:hover {
+            color: #eaeaea;
+            background-color: darken(@theme3, 10%);
+        }
+
+        &:active {
+            color: white;
+        }
+
+        &_close {
+            &:before {
+                content: '\f00d';
+            }
+
+            &:hover {
+                background-color: @red;
+            }
+        }
+
+    }
+}
