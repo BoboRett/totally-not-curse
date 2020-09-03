@@ -1,0 +1,29 @@
+@import (reference) './variables.less';
+
+@font-face {
+    font-family: Spartan;
+    src: url('../media/fonts/Spartan-VariableFont_wght.ttf');
+}
+
+@font-face {
+    font-family: FontAwesome;
+    src: url('../media/fonts/fa-solid-900.woff2');
+}
+
+body {
+    height: 100vh;
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    color: lighten(@theme4, 20%);
+    background: linear-gradient(-45deg, @theme0, darken(@theme1, 10%));
+    font-family: Spartan;
+    user-select: none;
+}
+
+.root {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
