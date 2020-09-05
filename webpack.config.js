@@ -9,6 +9,7 @@ module.exports = (env, argv) => {
         devtool: 'inline-source-map',
         devServer: {
             contentBase: path.resolve(__dirname, 'public'),
+            historyApiFallback: true,
             hot: true,
             watchOptions: {
                 ignored: [/node_modules/, 'main/*']
