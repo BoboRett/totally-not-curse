@@ -14,7 +14,7 @@ module.exports = (env, argv) => {
                 ignored: [/node_modules/, 'main/*']
             }
         },
-        entry: path.resolve(__dirname, 'renderer/app.js'),
+        entry: path.resolve(__dirname, 'renderer/index.js'),
         mode: 'development',
         module: {
             rules: [

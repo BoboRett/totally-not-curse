@@ -1,4 +1,3 @@
-import ReactDOM from 'react-dom';
 import React from 'react';
 import './app.less';
 
@@ -10,6 +9,4 @@ const App = () => {
     );
 };
 
-window.onload = () => {
-    ReactDOM.render(App(), document.querySelector('.root'));
-};
+export default App;
