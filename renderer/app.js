@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 
+import NavMenu from './nav-menu/nav-menu';
 import { setPaths } from './store/wow-client';
 import './app.less';
 
@@ -13,7 +14,7 @@ const App = ({ setPaths }) => {
 
     return (
         <>
-            <h1>Boop</h1>
+            <NavMenu />
         </>
     );
 };

@@ -1,0 +1,63 @@
+@import (reference) '../variables.less';
+
+.nav-menu {
+    height: 100%;
+    min-width: 160px;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff03;
+    box-shadow: 0px 0px 7px #00000080;
+
+    a {
+        padding-right: 8px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        border-left: 0px solid black;
+        color: @theme4;
+        font-size: 22px;
+        opacity: 0.7;
+        text-decoration: none;
+        transition: opacity 100ms, border-left 200ms;
+
+        &:hover {
+            border-left: 4px solid @theme3;
+            opacity: 1;
+        }
+
+        &:active {
+            border-left: 10px solid @theme3;
+            opacity: 0.6;
+        }
+        
+        &.active {
+            border-left: 7px solid @theme3;
+            opacity: 1;
+            pointer-events: none;
+        }
+    }
+
+    &__spacer {
+        flex-grow: 1;
+    }
+
+    &__sub-menu {
+        height: 0px;
+        overflow: hidden;
+        background-color: #00000060;
+        border-bottom: 0px solid black;
+        border-top: 0px solid black;
+        transition: 100ms;
+
+        a {
+            height: 30px;
+            font-size: 18px;
+        }
+
+        &.active {
+            border-bottom: 1px solid black;
+            border-top: 1px solid black;
+        }
+    }
+}
