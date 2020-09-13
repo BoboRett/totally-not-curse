@@ -104,3 +104,24 @@ body {
 
     }
 }
+
+::-webkit-scrollbar {
+    width: 15px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-track:hover {
+    background: #5552;
+}
+
+::-webkit-scrollbar-thumb {
+    background: @theme1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: lighten(@theme1, 5%);
+}
