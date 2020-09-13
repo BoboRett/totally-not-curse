@@ -1,0 +1,159 @@
+@import (reference) '../variables.less';
+
+.addon-manager {
+    position: relative;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+
+    &__commands {
+        position: sticky;
+        min-height: 64px;
+        top: 0;
+        margin-bottom: -20px;
+        background: linear-gradient(-45deg, #202020, #080e0c);
+        -webkit-mask-image: linear-gradient(black 50%, transparent);
+        background-attachment: fixed;
+
+        button {
+            height: 32px;
+            display: flex;
+            align-items: center;
+            color: @theme4;
+            border: none;
+            font: inherit;
+            font-size: 14px;
+            outline: none;
+            background-color: transparent;
+
+            &:hover {
+                background-color: @theme2;
+            }
+
+            &:before {
+                padding-right: 6px;
+            }
+        }
+
+        #resync:before {
+            content: '\f2f1';
+            font-family: FontAwesome;
+            font-size: 20px;
+        }
+    }
+
+    &__header {
+        color: lighten(@theme0, 50%);
+        font-size: 11px;
+        text-transform: uppercase;
+    }
+
+    &__header, .addon-row {
+        display: flex;
+
+        > *:nth-child(1) {
+            flex-basis: 50px;
+        }
+
+        > *:nth-child(2) {
+            flex-grow: 1;
+            padding-left: 20px;
+        }
+
+        > *:nth-child(3) {
+            flex-basis: 150px;
+        }
+    }
+
+    &__table {
+        height: 100%;
+        box-sizing: border-box;
+        padding: 20px;
+    }
+
+    .addon-row {
+        height: 40px;
+        align-items: center;
+        border-top: 1px solid @theme0;
+        border-bottom: 1px solid @theme0;
+        color: @theme4;
+        font-size: 14px;
+        transition: background-color 50ms;
+
+        &__title {
+            color: lighten(@theme4, 10%);
+            padding-top: 4px;
+        }
+
+        &__authors {
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        &__status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: @theme4;
+
+            &:before {
+                height: 30px;
+                width: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 0px solid transparent;
+                border-radius: 50%;
+                font-family: FontAwesome;
+                transition: 200ms;
+            }
+
+            // OK
+            &[data-status="0"] {
+                color: fade(@theme4, 50%);
+                &:before {
+                    content: '\f00c';
+                }
+            }
+
+            // Update Available
+            &[data-status="1"]:before {
+                content: '\f019';
+                font-size: 18px;
+            }
+
+            // Waiting
+            &[data-status="2"]:before {
+                content: '\f04c';
+                border: 2px solid @theme1;
+            }
+
+            // Updating
+            &[data-status="3"]:before {
+                content: '\f019';
+                border: 2px solid @theme2;
+            }
+
+            &[data-status="1"] {
+                &:hover:before {
+                    background-color: @theme3;
+                }
+            }
+        }
+
+        &[data-type="-1"] {
+            background-color: fade(@red, 10%);
+        }
+
+        &[data-type="0"] {
+            background-color: fade(cyan, 5%);
+        }
+
+        &:hover {
+            background-color: fade(@theme1, 30%);
+        }
+    }
+}
