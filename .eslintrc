@@ -12,7 +12,8 @@
         // lodash
         "_": "readonly",
         // electron api
-        "api": "readonly"
+        "api": "readonly",
+        "events": "readonly"
     },
     "parserOptions": {
         "ecmaVersion": 6,
