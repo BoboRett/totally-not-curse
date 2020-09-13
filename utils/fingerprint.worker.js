@@ -3,7 +3,8 @@ const _ = require('lodash');
 const path = require('path');
 const { promisify } = require('util');
 const U = require('uint32');
-const { isMainThread, parentPort, workerData } = require('worker_threads');
+// const { isMainThread, parentPort, workerData } = require('worker_threads');
+const { expose, isWorkerRuntime } = require('threads/worker');
 
 const readFileAsync = promisify(fs.readFile);
 const readdirAsync = promisify(fs.readdir);
@@ -140,10 +141,10 @@ function getAddonDirFingerprint(path) {
     ;
 }
 
-if(isMainThread) {
-    module.exports = { getAddonDirFingerprint };
+if(isWorkerRuntime) {
+    expose(function(workerData) {
+        return Promise.all(_.map(workerData, getAddonDirFingerprint));
+    });
 } else {
-    Promise.all(_.map(workerData, getAddonDirFingerprint))
-        .then(fingerprints => parentPort.postMessage(fingerprints))
-    ;
+    module.exports = { getAddonDirFingerprint };
 }

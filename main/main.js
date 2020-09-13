@@ -26,6 +26,7 @@ function createWindow () {
         win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`);
     }
 
+    require('./addons.js').handle();
     require('./client.js').handle();
     require('./window.js').handle();
 }

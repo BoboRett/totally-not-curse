@@ -7,7 +7,10 @@ contextBridge.exposeInMainWorld('api', {
     minimiseWindow: () => renderer.send('window', 'minimise'),
     fullscreenWindow: () => renderer.send('window', 'toggleFullscreen'),
     // client
-    findWow: () => renderer.invoke('findWow')
+    findWow: () => renderer.invoke('findWow'),
+    // addons
+    getInstalledAddons: wowPath => renderer.invoke('getInstalledAddons', wowPath),
+    getAddon: curseId => renderer.invoke('getAddonById', curseId)
 });
 function wrapEmitter(emitter) {
     return {
