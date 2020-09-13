@@ -1,15 +1,15 @@
 export default {
-    reducer: function(state, action) {
+    reducer: function(state = {}, action) {
         switch(action.type) {
             case 'SET_PATHS':
-                return _.assign({}, state, { wowPaths: action.paths });
+                return _.assign({}, state, { paths: action.paths });
             case 'SET_VERSION':
-                return _.assign({}, state, { clientVersion: action.version });
+                return _.assign({}, state, { version: action.version });
             default:
                 return state;
         }
     },
-    init: () => ({ wowPaths: {}, clientVersion: 'wow_retail' })
+    init: () => ({ paths: {}, version: 'wow_retail' })
 };
 
 export function setPaths(paths) {

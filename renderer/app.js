@@ -3,10 +3,12 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 
+import AddonManager from './addons/addon-manager';
 import NavMenu from './nav-menu/nav-menu';
 import ProgressBar from './progress-bar/progress-bar';
 import { setPaths } from './store/wow-client';
 import './app.less';
+import { Switch, Route } from 'react-router-dom';
 
 const App = ({ setPaths }) => {
     useEffect(() => {
@@ -17,6 +19,13 @@ const App = ({ setPaths }) => {
         <>
             <div className="app">
                 <NavMenu />
+                <div className="app__main">
+                <Switch>
+                    <Route exact path="/addons">
+                        <AddonManager />
+                    </Route>
+                </Switch>
+                </div>
             </div>
             <ProgressBar />
         </>
