@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 
 import NavMenu from './nav-menu/nav-menu';
+import ProgressBar from './progress-bar/progress-bar';
 import { setPaths } from './store/wow-client';
 import './app.less';
 
@@ -14,7 +15,10 @@ const App = ({ setPaths }) => {
 
     return (
         <>
-            <NavMenu />
+            <div className="app">
+                <NavMenu />
+            </div>
+            <ProgressBar />
         </>
     );
 };

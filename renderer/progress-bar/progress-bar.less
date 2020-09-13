@@ -1,0 +1,58 @@
+@import (reference) '../variables.less';
+
+@keyframes indeterminate-progress {
+    0% { background-position: 0% }
+    100% { background-position: 100% }
+}
+
+.progress-bar {
+    position: relative;
+    min-height: 0px;
+    max-height: 0px;
+    background-color: @theme1;
+    transition: 100ms;
+
+    &.active {
+        min-height: 7px;
+        max-height: 7px;
+    }
+
+    &__fill {
+        display: block;
+        height: 100%;
+
+        &.determinate {
+            background-color: @theme3;
+            transition: 100ms;
+        }
+
+        &.indeterminate {
+            width: 100%;
+            background: linear-gradient(30deg,
+                @theme3, @theme3 40%,
+                @theme2 40%, @theme2 80%,
+                @theme3 80%
+            );
+            background-size: 60px;
+            animation: indeterminate-progress 10s linear infinite;
+        }
+    }
+
+    &__status {
+        position: absolute;
+        bottom: 7px;
+        right: 5px;
+        padding: 3px;
+        background-color: fade(@theme0, 50%);
+        backdrop-filter: blur(5px);
+        color: @theme4;
+        font-size: 14px;
+        font-style: italic;
+        opacity: 1;
+        transition: opacity 100ms;
+
+        &:empty {
+            opacity: 0;
+        }
+    }
+}
