@@ -4,12 +4,16 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useCallback } from 'react';
 
 import { setAddons } from '../store/addons';
+import { ADDON_STATUS } from '../../utils/constants';
 import './addon-manager.less';
 
 const AddonManager = ({ addons, setAddons, wowPath }) => {
-    const resync = useCallback(() => {
-        api.getInstalledAddons(wowPath).then(setAddons);
+    const resync = useCallback(refresh => {
+        api.getInstalledAddons(wowPath, refresh).then(setAddons);
     }, [wowPath]);
+    const checkForUpdate = useCallback(() => {
+        api.checkForUpdates().then(setAddons);
+    });
 
     useEffect(() => {
         if(wowPath && addons.length === 0) {
@@ -20,7 +24,7 @@ const AddonManager = ({ addons, setAddons, wowPath }) => {
     return (
         <div className="addon-manager">
             <div className="addon-manager__commands">
-                <button id="resync" onClick={resync}>Check for updates</button>
+                <button id="resync" onClick={ev => ev.shiftKey ? resync(true) : checkForUpdate()}>Check for updates</button>
             </div>
             <div className="addon-manager__table">
                 <div className="addon-manager__header">
@@ -30,7 +34,7 @@ const AddonManager = ({ addons, setAddons, wowPath }) => {
                 </div>
                 { _.map(addons, addon => (
                     <div className="addon-row" key={addon.id} data-type={addon.type}>
-                        <span className="addon-row__status" data-status={_.floor(_.random(0, 3))} />
+                        <span className="addon-row__status" data-status={addon.status || ADDON_STATUS.OK} />
                         <span className="addon-row__title">{ addon.name }</span>
                         <span className="addon-row__authors">{ _.map(addon.authors, 'name').join(' ') }</span>
                     </div>

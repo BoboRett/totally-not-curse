@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
 const { spawn, Pool, Worker } = require('threads');
-const { ADDON_STATUS, ADDON_TYPE } = require('../utils/constants');
+const { ADDON_STATUS, ADDON_TYPE, ADDON_RELEASE_TYPE } = require('../utils/constants');
 
 function getAllAddonDirs(wowPath) {
     return new Promise((res, rej) => {
@@ -17,13 +17,14 @@ function getAllAddonDirs(wowPath) {
     });
 }
 
-function buildAddon(name, id, type, folders) {
+function buildAddon(name, id, type, folders, releaseType) {
     return {
         name,
         type,
         id,
         folders: _.map(folders, folder => ({ foldername: folder.foldername, fingerprint: folder.fingerprint })),
-        status: ADDON_STATUS.OK
+        status: ADDON_STATUS.OK,
+        releaseType: releaseType || ADDON_RELEASE_TYPE.STABLE
     };
 }
 
@@ -103,7 +104,8 @@ function fetchMissingAddons(addonsByDir, fetchAll, wowPath, sender) {
                             missingAddon,
                             match.id,
                             ADDON_TYPE.REMOVED,
-                            match.file.modules
+                            match.file.modules,
+                            match.file.releaseType
                         )
                     ;
                     curseAddons[match.id] = addon;
@@ -149,6 +151,31 @@ function handle() {
             .then(addons => {
                 ev.sender.send('progress_end');
                 return addons;
+            })
+        ;
+    });
+
+    ipcMain.handle('checkForUpdates', ev => {
+        ev.sender.send('progress_start', undefined, 'Fetching cache');
+        const cached = cache.loadAddons();
+        const ids = _.map(cached, 'id');
+        ev.sender.send('progress_start', undefined, 'Fetching addons from Curse');
+        return curse.getAddonsById(ids)
+            .then(addons => {
+                _.forEach(addons, addon => {
+                    const cachedAddon = _.find(cached, { id: addon.id });
+                    cachedAddon.status = _.some(
+                        addon.latestFiles,
+                        file => file.releaseType === cachedAddon.releaseType
+                            && file.gameVersionFlavor === 'wow_retail'
+                            && _.every(file.modules, module => _.find(cachedAddon.folders, { fingerprint: module.fingerprint }))
+                    )
+                        ? ADDON_STATUS.OK
+                        : ADDON_STATUS.UPDATE_AVAIL
+                    ;
+                });
+                ev.sender.send('progress_end');
+                return cached;
             })
         ;
     });
