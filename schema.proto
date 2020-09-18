@@ -20,6 +20,7 @@ message Addons {
         repeated Author authors = 6;
         repeated int32 categories = 7;
         repeated Folder folders = 8;
+        int32 releaseType = 9;
     }
 
     repeated Addon addons = 1;

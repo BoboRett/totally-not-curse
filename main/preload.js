@@ -9,7 +9,8 @@ contextBridge.exposeInMainWorld('api', {
     // client
     findWow: () => renderer.invoke('findWow'),
     // addons
-    getInstalledAddons: wowPath => renderer.invoke('getInstalledAddons', wowPath),
+    checkForUpdates: () => renderer.invoke('checkForUpdates'),
+    getInstalledAddons: (wowPath, refresh) => renderer.invoke('getInstalledAddons', wowPath, refresh),
     getAddon: curseId => renderer.invoke('getAddonById', curseId)
 });
 function wrapEmitter(emitter) {
