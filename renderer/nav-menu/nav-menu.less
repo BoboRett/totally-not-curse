@@ -2,11 +2,12 @@
 
 .nav-menu {
     height: 100%;
-    min-width: 160px;
+    min-width: @navbar-width;
     display: flex;
     flex-direction: column;
     background-color: #ffffff03;
     box-shadow: 0px 0px 7px #00000080;
+    z-index: 1;
 
     a {
         padding-right: 8px;
@@ -30,7 +31,7 @@
             border-left: 10px solid @theme3;
             opacity: 0.6;
         }
-        
+
         &.active {
             border-left: 7px solid @theme3;
             opacity: 1;
