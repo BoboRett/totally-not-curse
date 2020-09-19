@@ -42,9 +42,10 @@ body {
 }
 
 .titlebar {
+    height: @titlebar-height;
     display: flex;
     align-items: center;
-    background-color: #0000000f;
+    background-color: #00000020;
     -webkit-user-select: none;
     -webkit-app-region: drag;
 
@@ -106,7 +107,7 @@ body {
 }
 
 ::-webkit-scrollbar {
-    width: 15px;
+    width: @scrollbar-width;
     height: 10px;
 }
 

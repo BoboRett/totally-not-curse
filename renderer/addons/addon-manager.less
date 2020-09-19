@@ -2,38 +2,70 @@
 
 .addon-manager {
     position: relative;
+    padding-top: 164px;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
     overflow: auto;
 
-    &__commands {
-        position: sticky;
-        min-height: 64px;
-        top: 0;
-        margin-bottom: -20px;
-        background: linear-gradient(-45deg, #202020, #080e0c);
-        -webkit-mask-image: linear-gradient(black 50%, transparent);
-        background-attachment: fixed;
+    &__count {
+        position: absolute;
+        right: 0px;
+        top: -30px;
+        font-family: Heebo;
+        font-size: 96px;
+        font-weight: bold;
+        color: lighten(@theme0, 5%);
+    }
+
+    &__controls {
+        -webkit-app-region: no-drag;
+        position: absolute;
+        bottom: 24px;
+        display: flex;
+
+        > * {
+            margin-right: 2px;
+        }
+    }
+
+    &__header {
+        -webkit-app-region: drag;
+        position: fixed;
+        top: @titlebar-height;
+        width: calc(100% - @navbar-width - @scrollbar-width);
+        border-bottom: 1px solid @theme0;
+        overflow: hidden;
 
         button {
-            height: 32px;
             display: flex;
             align-items: center;
+            justify-content: center;
+            background-color: transparent;
+            border: 1px solid @theme2;
             color: @theme4;
-            border: none;
             font: inherit;
             font-size: 14px;
             outline: none;
-            background-color: transparent;
+            cursor: pointer;
+            transition: border 100ms;
 
             &:hover {
-                background-color: @theme2;
+                border: 1px solid @theme3;
             }
 
-            &:before {
-                padding-right: 6px;
+            &:not(:empty):before {
+                padding-right: 8px;
             }
+
+            span {
+                height: 12px;
+            }
+        }
+
+        button {
+            height: 40px;
+            width: 40px;
         }
 
         #resync:before {
@@ -41,19 +73,31 @@
             font-family: FontAwesome;
             font-size: 20px;
         }
+
+        #download-all:before {
+            content: '\f019';
+            font-family: FontAwesome;
+            font-size: 20px;
+        }
     }
 
-    &__header {
+    &__table-header {
+        position: absolute;
+        bottom: 0px;
+        width: 100%;
+        padding: 0px 20px;
+        box-sizing: border-box;
         color: lighten(@theme0, 50%);
         font-size: 11px;
         text-transform: uppercase;
     }
 
-    &__header, .addon-row {
+    &__table-header, .addon-row {
         display: flex;
 
         > *:nth-child(1) {
-            flex-basis: 50px;
+            min-width: 50px;
+            max-width: 50px;
         }
 
         > *:nth-child(2) {
@@ -62,14 +106,15 @@
         }
 
         > *:nth-child(3) {
-            flex-basis: 150px;
+            min-width: 150px;
+            max-width: 150px;
         }
     }
 
     &__table {
         height: 100%;
         box-sizing: border-box;
-        padding: 20px;
+        padding: 0px 20px;
     }
 
     .addon-row {
@@ -80,17 +125,20 @@
         color: @theme4;
         font-size: 14px;
         transition: background-color 50ms;
+        white-space: nowrap;
 
         &__title {
+            display: block;
             color: lighten(@theme4, 10%);
             padding-top: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         &__authors {
             display: block;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap;
         }
 
         &__status {
