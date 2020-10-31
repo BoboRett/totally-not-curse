@@ -1,11 +1,14 @@
+const axios = require('axios');
 const curse = require('../utils/curse');
 const cache = require('./cache');
 const { ipcMain } = require('electron');
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
+const taskQueue = require('promise-task-queue');
+const unzipper = require('unzipper');
 const _ = require('lodash');
 const { spawn, Pool, Worker } = require('threads');
-const { ADDON_STATUS, ADDON_TYPE, ADDON_RELEASE_TYPE } = require('../utils/constants');
+const { ADDON_STATUS, ADDON_TYPE, ADDON_RELEASE_TYPE, UPDATE_LIMIT } = require('../utils/constants');
 
 function getAllAddonDirs(wowPath) {
     return new Promise((res, rej) => {
@@ -136,6 +139,50 @@ function fetchMissingAddons(addonsByDir, fetchAll, wowPath, sender) {
     ;
 }
 
+function updateAddon({ addon, wowPath, sender }) {
+    const addonId = _.toString(addon.id);
+    sender.send(addonId, { status: ADDON_STATUS.UPDATE_PROG });
+    return curse.getAddonById(addonId)
+        .then(curseAddon => {
+            return _.find(curseAddon.latestFiles, file => (
+                file.releaseType === addon.releaseType
+                    && file.gameVersionFlavor === 'wow_retail'
+            ));
+        })
+        .then(latestFile => {
+            if(!latestFile) {
+                throw new Error('uh ohs, no file found');
+            } else {
+                return axios.get(latestFile.downloadUrl, {
+                    responseType: 'stream',
+                    onDownloadProgress(ev) { console.log('progress', ev); }
+                })
+                    .then(response => {
+                        addon.folders = latestFile.modules;
+                        return response.data;
+                    })
+                ;
+            }
+        })
+        .then(fileStream => {
+            const addonPath = path.join(wowPath, 'Interface/addons');
+            _.forEach(addon.folders, folder => {
+                fs.removeSync(path.join(addonPath, folder.foldername));
+            });
+            return fileStream
+                .pipe(unzipper.Extract({ path: addonPath }))
+                .promise()
+            ;
+        })
+        .then(() => {
+            sender.send(addonId, _.assign(addon, { status: ADDON_STATUS.OK }));
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    ;
+}
+
 function handle() {
     ipcMain.handle('getAddonById', (ev, curseId) => {
         return curse.getAddonById(curseId);
@@ -180,24 +227,15 @@ function handle() {
         ;
     });
 
-    ipcMain.handle('updateAddon', (ev, addon) => {
+    const queue = taskQueue();
+    queue.define('addonUpdate', updateAddon, {
+        concurrency: UPDATE_LIMIT
+    });
+    queue.on('queueCompleted:addonUpdate', cache.saveAddons);
+
+    ipcMain.handle('updateAddon', (ev, addon, wowPath) => {
         ev.sender.send('' + addon.id, { status: ADDON_STATUS.UPDATE_WAIT });
-        setTimeout(() => {
-            ev.sender.send('' + addon.id, { status: ADDON_STATUS.UPDATE_PROG, updateProgress: 0 });
-        }, 1000);
-        setTimeout(() => {
-            ev.sender.send('' + addon.id, { status: ADDON_STATUS.UPDATE_PROG, updateProgress: 50 });
-        }, 1500);
-        setTimeout(() => {
-            ev.sender.send('' + addon.id, { status: ADDON_STATUS.UPDATE_PROG, updateProgress: 100 });
-        }, 2500);
-        setTimeout(() => {
-            ev.sender.send('' + addon.id, { status: ADDON_STATUS.UPDATE_PROG, updateProgress: null });
-        }, 3000);
-        setTimeout(() => {
-            ev.sender.send('' + addon.id, { status: ADDON_STATUS.OK });
-        }, 4000);
-        return new Promise(res => setTimeout(() => res(), 4100));
+        queue.push('addonUpdate', { addon, wowPath, sender: ev.sender });
     });
 }
 

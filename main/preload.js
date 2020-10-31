@@ -12,10 +12,10 @@ contextBridge.exposeInMainWorld('api', {
     checkForUpdates: () => renderer.invoke('checkForUpdates'),
     getInstalledAddons: (wowPath, refresh) => renderer.invoke('getInstalledAddons', wowPath, refresh),
     getAddon: curseId => renderer.invoke('getAddonById', curseId),
-    updateAddon: (addon) => {
+    updateAddon: (addon, wowPath) => {
         const events = new EventEmitter();
         renderer.on(addon.id, (ev, ...payload) => events.emit('update', ...payload));
-        renderer.invoke('updateAddon', addon);
+        renderer.invoke('updateAddon', addon, wowPath);
         return wrapEmitter(events);
     }
 });

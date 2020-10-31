@@ -45,7 +45,7 @@ const AddonManager = ({ addons, setAddons, setAddon, wowPath }) => {
     });
     
     const updateAddon = useCallback(addon => {
-        api.updateAddon(addon)
+        api.updateAddon(addon, wowPath)
             .on('update', payload => setAddon(addon.id, payload))
         ;
     });
