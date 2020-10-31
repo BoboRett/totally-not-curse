@@ -1,4 +1,5 @@
 const axios = require('axios');
+const _ = require('lodash');
 
 const curseAPI = 'https://addons-ecs.forgesvc.net/api/v2/';
 
@@ -30,13 +31,31 @@ function getFileByFingerprint(fingerprint) {
     }).then(({ data }) => data);
 }
 
-function getFilesByFingerprint(fingerprints) {
+function getFilesByFingerprintOnce(fingerprints) {
     return axios({
         method: 'POST',
         baseURL: curseAPI,
         url: '/fingerprint',
         data: fingerprints
     }).then(({ data }) => data);
+}
+
+function getFilesByFingerprint(fingerprints, retries) {
+    return getFilesByFingerprintOnce(fingerprints)
+        .then(allFiles => {
+            const hits = _.concat(allFiles.exactMatches, allFiles.partialMatches);
+            const misses = allFiles.unmatchedFingerprints;
+            if(misses.length && retries > 0) {
+                return getFilesByFingerprint(misses, retries - 1)
+                    .then(retriedFiles => {
+                        return _.concat(hits, retriedFiles);
+                    })
+                ;
+            } else {
+                return hits;
+            }
+        })
+    ;
 }
 
 module.exports = {
