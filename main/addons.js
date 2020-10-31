@@ -88,11 +88,10 @@ function fetchMissingAddons(addonsByDir, fetchAll, wowPath, sender) {
     return getAddonDirFingerprints(wowPath, addons.missing, sender)
         .then(fingerprints => {
             sender.send('progress_start', undefined, 'Fetching addons from Curse');
-            return curse.getFilesByFingerprint(fingerprints);
+            return curse.getFilesByFingerprint(fingerprints, 3);
         })
         .then(files => {
-            const hits = _.concat(files.exactMatches, files.partialMatches);
-            return _.transform(hits, (matches, match) => {
+            return _.transform(files, (matches, match) => {
                 _.forEach(match.file.modules, module => {
                     matches[module.foldername] = match;
                 });
