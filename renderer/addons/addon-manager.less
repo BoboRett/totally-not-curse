@@ -34,6 +34,7 @@
         position: fixed;
         top: @titlebar-height;
         width: calc(100% - @navbar-width - @scrollbar-width);
+        z-index: 1;
         border-bottom: 1px solid @theme0;
         overflow: hidden;
 
@@ -139,57 +140,6 @@
             display: block;
             overflow: hidden;
             text-overflow: ellipsis;
-        }
-
-        &__status {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: @theme4;
-
-            &:before {
-                height: 30px;
-                width: 30px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border: 0px solid transparent;
-                border-radius: 50%;
-                font-family: FontAwesome;
-                transition: 200ms;
-            }
-
-            // OK
-            &[data-status="0"] {
-                color: fade(@theme4, 50%);
-                &:before {
-                    content: '\f00c';
-                }
-            }
-
-            // Update Available
-            &[data-status="1"]:before {
-                content: '\f019';
-                font-size: 18px;
-            }
-
-            // Waiting
-            &[data-status="2"]:before {
-                content: '\f04c';
-                border: 2px solid @theme1;
-            }
-
-            // Updating
-            &[data-status="3"]:before {
-                content: '\f019';
-                border: 2px solid @theme2;
-            }
-
-            &[data-status="1"] {
-                &:hover:before {
-                    background-color: @theme3;
-                }
-            }
         }
 
         &[data-type="-1"] {
