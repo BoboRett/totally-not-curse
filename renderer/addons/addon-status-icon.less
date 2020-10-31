@@ -1,0 +1,90 @@
+@import (reference) '../variables.less';
+
+@keyframes progress-spin {
+    from { transform: rotate(-45deg); }
+    to { transform: rotate(315deg); }
+}
+
+.addon-status {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: @theme4;
+    cursor: pointer;
+    pointer-events: none;
+
+    &__progress {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        overflow: visible;
+
+        &-bg {
+            fill: none;
+            stroke: @theme1;
+            stroke-width: 2px;
+        }
+
+        &-fill {
+            fill: none;
+            stroke: @theme2;
+            stroke-dasharray: 98px;
+            stroke-width: 2px;
+            transform-origin: center;
+            transform: rotate(-90deg);
+            transition: stroke-dashoffset 100ms;
+
+            &.indeterminate {
+                stroke-dasharray: 12.6 20;
+                animation: progress-spin 2s linear infinite;
+                transition: stroke-dashoffset 0ms;
+            }
+        }
+    }
+
+    &:before {
+        height: 30px;
+        width: 30px;
+        display: flex;
+        align-items: center;
+        border-radius: 50%;
+        justify-content: center;
+        font-family: FontAwesome;
+        transition: 200ms;
+    }
+
+    // OK
+    &[data-status="0"] {
+        color: fade(@theme4, 50%);
+        &:before {
+            content: '\f00c';
+        }
+    }
+
+    // Update Available
+    &[data-status="1"] {
+        pointer-events: all;
+
+        &:before {
+            content: '\f019';
+            font-size: 18px;
+        }
+    }
+
+    // Waiting
+    &[data-status="2"]:before {
+        content: '\f04c';
+    }
+
+    // Updating
+    &[data-status="3"]:before {
+        content: '\f019';
+    }
+
+    &[data-status="1"] {
+        &:hover:before {
+            background-color: @theme3;
+        }
+    }
+}

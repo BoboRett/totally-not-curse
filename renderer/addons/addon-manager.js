@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import React, { useEffect, useCallback, useRef } from 'react';
 
-import { setAddons } from '../store/addons';
+import AddonStatus from './addon-status-icon';
 import { ADDON_STATUS } from '../../utils/constants';
 import './addon-manager.less';
 import Transitioner from '../transitioner/transitioner';
@@ -82,7 +82,7 @@ const AddonManager = ({ addons, setAddons, wowPath }) => {
             <div className="addon-manager__table">
                 { _.map(addons, addon => (
                     <div className="addon-row" key={addon.id} data-type={addon.type}>
-                        <span className="addon-row__status" data-status={addon.status || ADDON_STATUS.OK} />
+                        <AddonStatus addon={addon} />
                         <span className="addon-row__title">{ addon.name }</span>
                         <span className="addon-row__authors">{ _.map(addon.authors, 'name').join(' ') }</span>
                     </div>
