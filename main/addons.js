@@ -179,6 +179,26 @@ function handle() {
             })
         ;
     });
+
+    ipcMain.handle('updateAddon', (ev, addon) => {
+        ev.sender.send('' + addon.id, { status: ADDON_STATUS.UPDATE_WAIT });
+        setTimeout(() => {
+            ev.sender.send('' + addon.id, { status: ADDON_STATUS.UPDATE_PROG, updateProgress: 0 });
+        }, 1000);
+        setTimeout(() => {
+            ev.sender.send('' + addon.id, { status: ADDON_STATUS.UPDATE_PROG, updateProgress: 50 });
+        }, 1500);
+        setTimeout(() => {
+            ev.sender.send('' + addon.id, { status: ADDON_STATUS.UPDATE_PROG, updateProgress: 100 });
+        }, 2500);
+        setTimeout(() => {
+            ev.sender.send('' + addon.id, { status: ADDON_STATUS.UPDATE_PROG, updateProgress: null });
+        }, 3000);
+        setTimeout(() => {
+            ev.sender.send('' + addon.id, { status: ADDON_STATUS.OK });
+        }, 4000);
+        return new Promise(res => setTimeout(() => res(), 4100));
+    });
 }
 
 module.exports = { handle };
