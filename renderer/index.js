@@ -9,6 +9,7 @@ import App from './app';
 import createStore from './store/redux-store';
 
 const store = createStore();
+window.store = store;
 
 window.addEventListener('DOMContentLoaded', () => {
     ReactDOM.render(
