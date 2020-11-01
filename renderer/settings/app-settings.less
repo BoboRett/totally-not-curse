@@ -1,0 +1,38 @@
+@import (reference) '../variables.less';
+
+.app-settings {
+    margin: 0px auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    width: @max-content-width;
+    outline: 1px solid fade(@theme4, 10%);
+
+    &__entry {
+        display: flex;
+        min-height: 24px;
+        width: 100%;
+        margin: 12px 0px;
+        align-items: flex-end;
+        border-bottom: 2px solid fade(@theme4, 10%);
+
+        &-heading {
+            .small-heading();
+
+            flex-grow: 1;
+        }
+
+        &-value {
+            &_checkbox {
+                .base-checkbox();
+
+                margin: 2px;
+            }
+
+            &_text {
+                .base-heading();
+            }
+
+        }
+    }
+}

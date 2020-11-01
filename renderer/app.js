@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 
 import AddonManager from './addons/addon-manager';
+import AppSettings from './settings/app-settings';
 import NavMenu from './nav-menu/nav-menu';
 import ProgressBar from './progress-bar/progress-bar';
 import { setPaths } from './store/wow-client';
@@ -23,6 +24,9 @@ const App = ({ setPaths }) => {
                 <Switch>
                     <Route exact path="/addons">
                         <AddonManager />
+                    </Route>
+                    <Route exact path="/settings">
+                        <AppSettings />
                     </Route>
                 </Switch>
                 </div>
