@@ -201,7 +201,7 @@ function handle() {
         ;
     });
 
-    ipcMain.handle('checkForUpdates', ev => {
+    ipcMain.handle('checkForAddonUpdates', ev => {
         ev.sender.send('progress_start', undefined, 'Fetching cache');
         const cached = cache.loadAddons();
         const ids = _.map(cached, 'id');

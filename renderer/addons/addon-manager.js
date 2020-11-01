@@ -41,9 +41,9 @@ const AddonManager = ({ addons, setAddons, setAddon, wowPath }) => {
         api.getInstalledAddons(wowPath, refresh).then(setAddons);
     }, [wowPath]);
     const checkForUpdate = useCallback(() => {
-        api.checkForUpdates().then(setAddons);
+        api.checkForAddonUpdates().then(setAddons);
     });
-    
+
     const updateAddon = useCallback(addon => {
         api.updateAddon(addon, wowPath)
             .on('update', payload => setAddon(addon.id, payload))

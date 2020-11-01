@@ -9,7 +9,7 @@ contextBridge.exposeInMainWorld('api', {
     // client
     findWow: () => renderer.invoke('findWow'),
     // addons
-    checkForUpdates: () => renderer.invoke('checkForUpdates'),
+    checkForAddonUpdates: () => renderer.invoke('checkForAddonUpdates'),
     getInstalledAddons: (wowPath, refresh) => renderer.invoke('getInstalledAddons', wowPath, refresh),
     getAddon: curseId => renderer.invoke('getAddonById', curseId),
     updateAddon: (addon, wowPath) => {
