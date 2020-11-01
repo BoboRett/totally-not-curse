@@ -6,6 +6,12 @@ contextBridge.exposeInMainWorld('api', {
     closeWindow: () => renderer.send('window', 'close'),
     minimiseWindow: () => renderer.send('window', 'minimise'),
     fullscreenWindow: () => renderer.send('window', 'toggleFullscreen'),
+    // app
+    cancelAppUpdate: () => renderer.invoke('cancelAppUpdate'),
+    checkForAppUpdate: allowPrerelease => renderer.invoke('checkForAppUpdate', allowPrerelease),
+    downloadAppUpdate: () => renderer.invoke('downloadAppUpdate'),
+    getAppVersion: () => renderer.invoke('getAppVersion'),
+    installAppUpdate: () => renderer.invoke('installAppUpdate'),
     // client
     findWow: () => renderer.invoke('findWow'),
     // addons

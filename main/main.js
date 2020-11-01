@@ -28,6 +28,7 @@ function createWindow () {
 
     require('./addons.js').handle();
     require('./client.js').handle();
+    require('./updates.js').handle();
     require('./window.js').handle();
 }
 
