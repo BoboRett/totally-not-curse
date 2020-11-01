@@ -64,7 +64,8 @@ module.exports = (env, argv) => {
         plugins: [
             new CopyWebpackPlugin({
                 patterns: [
-                    { from: 'public/*.js', flatten: true }
+                    { from: 'public/*.js', flatten: true },
+                    { from: 'media/icon.ico', flatten: true }
                 ]
             }),
             new HtmlWebpackPlugin({
