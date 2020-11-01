@@ -12,6 +12,7 @@
         "files": [
             "build/**/*",
             "main/**/*",
+            "utils/**/*",
             "schema.proto"
         ],
         "mac": {
