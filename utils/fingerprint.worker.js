@@ -1,10 +1,11 @@
+const WorkerUtils = require('../utils/worker-utils');
+WorkerUtils.isDev() && WorkerUtils.registerAsar();
 const fs = require('fs');
-const _ = require('lodash');
+const _ = WorkerUtils.getModule('lodash');
 const path = require('path');
 const { promisify } = require('util');
-const U = require('uint32');
-// const { isMainThread, parentPort, workerData } = require('worker_threads');
-const { expose, isWorkerRuntime } = require('threads/worker');
+const U = WorkerUtils.getModule('uint32');
+const { expose, isWorkerRuntime } = WorkerUtils.getModule('threads/worker');
 
 const readFileAsync = promisify(fs.readFile);
 const readdirAsync = promisify(fs.readdir);
