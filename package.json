@@ -1,6 +1,6 @@
 {
     "name": "totallynotcurse",
-    "version": "1.0.0",
+    "version": "1.0.0-alpha",
     "main": "main/main.js",
     "author": "BoboRett <BoboRett@users.noreply.github.com>",
     "license": "MIT",
@@ -25,7 +25,8 @@
         "dev:electron": "electron .",
         "dev": "concurrently -k -n js,electron -c green,cyan \"yarn run dev:js\" \"yarn run dev:electron\"",
         "pack": "webpack -p && electron-builder --dir",
-        "dist": "webpack -p && electron-builder"
+        "dist": "webpack -p && electron-builder",
+        "release": "webpack -p && electron-builder -p always"
     },
     "dependencies": {
         "axios": "^0.20.0",
