@@ -47,13 +47,16 @@ module.exports = (env, argv) => {
                 },
                 {
                     test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
-                    loader: 'file-loader'
+                    loader: 'file-loader',
+                    options: {
+                        name: '[name].[ext]'
+                    }
                 }
             ]
         },
         output: {
             path: path.resolve(__dirname, 'build'),
-            filename: prod ? '[name].[chunkhash:8].js' : '[name].js'
+            filename: '[name].js'
         },
         plugins: [
             new CopyWebpackPlugin({
@@ -66,7 +69,7 @@ module.exports = (env, argv) => {
                 template: path.resolve(__dirname, './public/index.html')
             }),
             new MiniCssExtractPlugin({
-                filename: prod ? '[name]-[contenthash:8].css' : '[name].css'
+                filename: '[name].css'
             })
         ],
         stats: 'errors-only'
