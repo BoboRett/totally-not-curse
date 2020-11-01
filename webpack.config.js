@@ -23,7 +23,10 @@ module.exports = (env, argv) => {
                     enforce: 'pre',
                     test: /\.js$/,
                     exclude: /node_modules/,
-                    use: 'eslint-loader'
+                    loader: 'eslint-loader',
+                    options: {
+                        emitWarning: true
+                    }
                 },
                 {
                     test: /\.js$/,
