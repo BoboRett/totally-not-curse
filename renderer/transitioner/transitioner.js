@@ -35,7 +35,7 @@ const Transitioner = ({ children, scrollParent, stops }) => {
 
     return (
         <>
-            { children(styles) }
+            { children(styles, alpha, stop) }
         </>
     );
 };

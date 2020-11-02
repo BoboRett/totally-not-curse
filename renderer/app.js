@@ -1,7 +1,7 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import AddonManager from './addons/addon-manager';
 import AppSettings from './settings/app-settings';
@@ -16,14 +16,16 @@ const App = ({ setPaths }) => {
         api.findWow().then(setPaths);
     }, []);
 
+    const appMain = useRef(null);
+
     return (
         <>
             <div className="app">
                 <NavMenu />
-                <div className="app__main">
+                <div ref={appMain} className="app__main">
                 <Switch>
                     <Route exact path="/addons">
-                        <AddonManager />
+                        <AddonManager appMain={appMain} />
                     </Route>
                     <Route exact path="/settings">
                         <AppSettings />

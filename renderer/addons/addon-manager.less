@@ -1,12 +1,10 @@
 @import (reference) '../variables.less';
 
 .addon-manager {
-    position: relative;
     padding-top: 164px;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    overflow: auto;
 
     &__count {
         position: absolute;
@@ -21,7 +19,7 @@
     &__controls {
         -webkit-app-region: no-drag;
         position: absolute;
-        bottom: 24px;
+        bottom: 12px;
         display: flex;
 
         > * {
@@ -39,34 +37,23 @@
         overflow: hidden;
 
         button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: transparent;
-            border: 1px solid @theme2;
-            color: @theme4;
-            font: inherit;
-            font-size: 14px;
-            outline: none;
-            cursor: pointer;
-            transition: border 100ms;
+            .base-button();
 
-            &:hover {
-                border: 1px solid @theme3;
-            }
+            height: 40px;
+            width: 200px;
+            overflow: hidden;
+            white-space: nowrap;
+            font-size: 14px;
 
             &:not(:empty):before {
                 padding-right: 8px;
             }
-
-            span {
-                height: 12px;
-            }
         }
 
-        button {
-            height: 40px;
-            width: 40px;
+        &_collapsed {
+            button {
+                width: 40px;
+            }
         }
 
         #resync:before {
@@ -82,76 +69,56 @@
         }
     }
 
-    &__table-header {
-        position: absolute;
-        bottom: 0px;
-        width: 100%;
-        padding: 0px 20px;
-        box-sizing: border-box;
-        color: lighten(@theme0, 50%);
-        font-size: 11px;
-        text-transform: uppercase;
-    }
-
-    &__table-header, .addon-row {
-        display: flex;
-
-        > *:nth-child(1) {
-            min-width: 50px;
-            max-width: 50px;
-        }
-
-        > *:nth-child(2) {
-            flex-grow: 1;
-            padding-left: 20px;
-        }
-
-        > *:nth-child(3) {
-            min-width: 150px;
-            max-width: 150px;
-        }
-    }
-
     &__table {
         height: 100%;
-        box-sizing: border-box;
-        padding: 0px 20px;
-    }
+        width: 100%;
+        margin: auto;
+        max-width: @max-content-width;
+        border-collapse: collapse;
+        table-layout: fixed;
 
-    .addon-row {
-        height: 40px;
-        align-items: center;
-        border-top: 1px solid @theme0;
-        border-bottom: 1px solid @theme0;
-        color: @theme4;
-        font-size: 14px;
-        transition: background-color 50ms;
-        white-space: nowrap;
+        th {
+            .small-heading();
 
-        &__title {
-            display: block;
-            color: lighten(@theme4, 10%);
-            padding-top: 4px;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            position: sticky;
+            top: 65px;
+            padding-top: 8px;
+            background: linear-gradient(-45deg, rgb(33, 33, 33), rgb(8, 14, 12)) fixed;
         }
 
-        &__authors {
-            display: block;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        .addon-row {
+            height: 44px;
+            align-items: center;
+            border-top: 2px solid @theme0;
+            color: @theme4;
+            font-size: 14px;
+            transition: background-color 50ms;
+            white-space: nowrap;
 
-        &[data-type="-1"] {
-            background-color: fade(@red, 10%);
-        }
+            &__title {
+                color: lighten(@theme4, 10%);
+                padding-top: 4px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
 
-        &[data-type="0"] {
-            background-color: fade(cyan, 5%);
-        }
+            &__authors {
+                padding-top: 4px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
 
-        &:hover {
-            background-color: fade(@theme1, 30%);
+            &[data-type="-1"] {
+                background-color: fade(@red, 10%);
+            }
+
+            &[data-type="0"] {
+                background-color: fade(cyan, 5%);
+            }
+
+            &:hover {
+                background-color: fade(@theme1, 30%);
+            }
         }
     }
 }
