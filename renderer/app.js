@@ -5,6 +5,7 @@ import React, { useEffect, useRef } from 'react';
 
 import AddonManager from './addons/addon-manager';
 import AppSettings from './settings/app-settings';
+import ErrorDialog from './error-dialog/error-dialog';
 import NavMenu from './nav-menu/nav-menu';
 import ProgressBar from './progress-bar/progress-bar';
 import { setPaths } from './store/wow-client';
@@ -34,6 +35,7 @@ const App = ({ setPaths }) => {
                 </div>
             </div>
             <ProgressBar />
+            <ErrorDialog />
         </>
     );
 };

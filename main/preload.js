@@ -40,4 +40,4 @@ contextBridge.exposeInMainWorld('events', wrapEmitter(globalEvents));
 renderer.on('progress', (ev, ...payload) => globalEvents.emit('progress', ...payload));
 renderer.on('progress_start', (ev, ...payload) => globalEvents.emit('progress_start', ...payload));
 renderer.on('progress_end', (ev, ...payload) => globalEvents.emit('progress_end', ...payload));
-renderer.on(EventEmitter.errorMonitor, (ev, ...payload) => globalEvents.emit('error', ...payload));
+renderer.on('error', (ev, ...payload) => globalEvents.emit('error', ...payload));
