@@ -6,13 +6,16 @@ const ProgressBar = () => {
     const [progress, setProgress] = useState(null);
 
     useEffect(() => {
-        events.on('progress_start', (total, msg) => setProgress(_.assign({ msg }, _.isNil(total) || { total })));
-        events.on('progress', (delta, msg) => setProgress(curProgress => _.assign({}, curProgress, { value: _.get(curProgress, 'value', 0) + delta, msg })));
-        events.on('progress_end', () => setProgress(null));
+        const progStart = (total, msg) => setProgress(_.assign({ msg }, _.isNil(total) || { total }));
+        const prog = (delta, msg) => setProgress(curProgress => _.assign({}, curProgress, { value: _.get(curProgress, 'value', 0) + delta, msg }));
+        const progEnd = () => setProgress(null);
+        events.on('progress_start', progStart);
+        events.on('progress', prog);
+        events.on('progress_end', progEnd);
         return () => {
-            events.removeAllListeners('progress_start');
-            events.removeAllListeners('progress');
-            events.removeAllListeners('progress_end');
+            events.off('progress_start', progStart);
+            events.off('progress', prog);
+            events.off('progress_end', progEnd);
         };
     }, []);
 

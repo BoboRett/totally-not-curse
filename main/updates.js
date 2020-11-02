@@ -3,10 +3,11 @@ const isDev = require('electron-is-dev');
 const { autoUpdater, CancellationToken } = require('electron-updater');
 const _ = require('lodash');
 
-function handle() {
+function handle(window) {
     autoUpdater.autoDownload = false;
     autoUpdater.autoInstallOnAppQuit = false;
     let cancellationToken = null;
+    autoUpdater.on('error', err => window.webContents.send('error', err.message));
 
     ipcMain.handle('checkForAppUpdate', (ev, allowPrerelease) => {
         autoUpdater.allowPrerelease = allowPrerelease;
@@ -15,6 +16,9 @@ function handle() {
             .then(updateInfo => {
                 ev.sender.send('progress_end');
                 return updateInfo;
+            })
+            .catch(() => {
+                ev.sender.send('progress_end');
             })
         ;
     });
