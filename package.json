@@ -26,6 +26,7 @@
         "dev:js": "webpack-dev-server",
         "dev:electron": "electron .",
         "dev": "concurrently -k -n js,electron -c green,cyan \"yarn run dev:js\" \"yarn run dev:electron\"",
+        "lint": "eslint .",
         "pack": "webpack -p && electron-builder --dir",
         "dist": "webpack -p && electron-builder",
         "release": "webpack -p && electron-builder -p always"
