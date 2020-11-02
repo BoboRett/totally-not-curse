@@ -17,8 +17,8 @@
             "utils/**/*",
             "schema.proto"
         ],
-        "mac": {
-            "category": "addon-manager"
+        "nsis": {
+            "artifactName": "${productName} Setup.${ext}"
         },
         "productName": "Totally Not Curse"
     },
