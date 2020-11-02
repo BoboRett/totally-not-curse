@@ -1,7 +1,7 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import React, { useEffect, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback } from 'react';
 
 import AddonStatus from './addon-status-icon';
 import { setAddons, setAddon } from '../store/addons';
@@ -36,7 +36,7 @@ const headerStops = {
     }
 };
 
-const AddonManager = ({ addons, setAddons, setAddon, wowPath }) => {
+const AddonManager = ({ addons, appMain, setAddons, setAddon, wowPath }) => {
     const resync = useCallback(refresh => {
         api.getInstalledAddons(wowPath, refresh).then(setAddons);
     }, [wowPath]);
@@ -53,8 +53,6 @@ const AddonManager = ({ addons, setAddons, setAddon, wowPath }) => {
         _.forEach(addons, addon => addon.status === ADDON_STATUS.UPDATE_AVAIL ? updateAddon(addon) : null);
     };
 
-    const root = useRef(null);
-
     useEffect(() => {
         if(wowPath && addons.length === 0) {
             resync();
@@ -62,43 +60,48 @@ const AddonManager = ({ addons, setAddons, setAddon, wowPath }) => {
     }, [wowPath]);
 
     return (
-        <div ref={root} className="addon-manager">
-            <Transitioner scrollParent={root} stops={headerStops}>
-                {styles => (
-                    <div className="addon-manager__header" style={styles.main}>
+        <div className="addon-manager">
+            <Transitioner scrollParent={appMain} stops={headerStops}>
+                {(styles, alpha) => (
+                    <div className={`addon-manager__header ${alpha >= 1 ? 'addon-manager__header_collapsed' : ''}`} style={styles.main}>
                         <div className="addon-manager__controls" style={styles.controls}>
-                            <button
-                                id="resync"
-                                style={styles.button}
-                                onClick={ev => ev.shiftKey ? resync(true) : checkForUpdate()}
-                            />
-                            <button
-                                id="download-all"
-                                style={styles.button}
-                                onClick={updateAll}
-                            />
+                            <button id="resync" onClick={ev => ev.shiftKey ? resync(true) : checkForUpdate()}>
+                                { alpha < 1 && 'Check for updates' }
+                            </button>
+                            <button id="download-all" onClick={updateAll}>
+                                { alpha < 1 && 'Update all' }
+                            </button>
                         </div>
                         <span
                             className="addon-manager__count"
                             style={styles.count}
                         >{ addons.length }</span>
-                        <div className="addon-manager__table-header">
-                            <span>Status</span>
-                            <span>Name</span>
-                            <span>Authors</span>
-                        </div>
                     </div>
                 )}
             </Transitioner>
-            <div className="addon-manager__table">
-                { _.map(addons, addon => (
-                    <div className="addon-row" key={addon.id} data-type={addon.type}>
-                        <AddonStatus addon={addon} onClick={() => updateAddon(addon)} />
-                        <span className="addon-row__title">{ addon.name }</span>
-                        <span className="addon-row__authors">{ _.map(addon.authors, 'name').join(' ') }</span>
-                    </div>
-                ))}
-            </div>
+            <table className="addon-manager__table">
+                <colgroup>
+                    <col style={{ width: '75px' }} />
+                    <col style={{ width: '80%' }} />
+                    <col style={{ width: '20%' }} />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Name</th>
+                        <th>Authors</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    { _.map(addons, addon => (
+                        <tr className="addon-row" key={addon.id} data-type={addon.type}>
+                            <td><AddonStatus addon={addon} onClick={() => updateAddon(addon)} /></td>
+                            <td className="addon-row__title">{ addon.name }</td>
+                            <td className="addon-row__authors">{ _.map(addon.authors, 'name').join(' ') }</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
     );
 };
@@ -114,6 +117,7 @@ function mapDispatchToProps(dispatch) {
 
 AddonManager.propTypes = {
     addons: PropTypes.arrayOf(PropTypes.object),
+    appMain: PropTypes.object,
     setAddons: PropTypes.func,
     setAddon: PropTypes.func,
     wowPath: PropTypes.string

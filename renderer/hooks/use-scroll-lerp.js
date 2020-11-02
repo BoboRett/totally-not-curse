@@ -2,7 +2,7 @@ const _ = require('lodash');
 const { useState, useEffect, useCallback } = require("react");
 
 const useScrollLerp = (el, stops) => {
-    const [out, setOut] = useState(stops[0][1]);
+    const [alpha, setOut] = useState(stops[0][1]);
     const [stop, setStop] = useState(0);
     const onScroll = useCallback(() => {
         const scroll = el.scrollTop;
@@ -30,7 +30,7 @@ const useScrollLerp = (el, stops) => {
         };
     }, [el, onScroll]);
 
-    return [out, stop];
+    return [alpha, stop];
 };
 
 export default useScrollLerp;

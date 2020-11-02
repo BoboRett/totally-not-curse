@@ -35,7 +35,7 @@ body {
     &__main {
         display: flex;
         flex-grow: 1;
-        overflow: hidden;
+        overflow: hidden auto;
     }
 }
 
@@ -115,6 +115,8 @@ body {
     width: @scrollbar-width;
     height: 10px;
 }
+
+::-webkit-scrollbar-corner { background: rgba(0,0,0,0); }
 
 ::-webkit-scrollbar-track {
     background: transparent;
