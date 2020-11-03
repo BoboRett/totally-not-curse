@@ -1,5 +1,5 @@
 const WorkerUtils = require('../utils/worker-utils');
-WorkerUtils.isDev() && WorkerUtils.registerAsar();
+WorkerUtils.registerAsar();
 const fs = require('fs');
 const _ = WorkerUtils.getModule('lodash');
 const path = require('path');
