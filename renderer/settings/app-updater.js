@@ -13,7 +13,7 @@ const AppUpdater = () => {
 
     const checkForUpdates = useCallback(() => {
         setCheckingForUpdate(true);
-        api.checkForAppUpdate(allowPrerelease)
+        api.app.updates.checkForAppUpdate(allowPrerelease)
             .then(updateInfo => {
                 setCheckingForUpdate(false);
                 if(_.has(updateInfo, 'downloadPromise')) {
@@ -25,7 +25,7 @@ const AppUpdater = () => {
     }, [allowPrerelease]);
     const downloadUpdate = useCallback(() => {
         setDownloadingUpdate(true);
-        api.downloadAppUpdate()
+        api.app.updates.downloadAppUpdate()
             .then(cancelled => {
                 setDownloadingUpdate(false);
                 setUpdateReady(!cancelled);
@@ -38,7 +38,7 @@ const AppUpdater = () => {
     });
 
     useEffect(() => {
-        api.getAppVersion().then(version => {
+        api.app.updates.getAppVersion().then(version => {
             setAppVersion(version);
             setAllowPrerelease(_.get(version, 'prerelease', []).length > 0);
         });
@@ -52,8 +52,8 @@ const AppUpdater = () => {
     ), [isDownloadingUpdate, isUpdateAvailable, isUpdateReady]);
 
     const buttonHandler = useMemo(() => (
-        (isUpdateReady && api.installAppUpdate) ||
-        (isDownloadingUpdate && api.cancelAppUpdate) ||
+        (isUpdateReady && api.app.updates.installAppUpdate) ||
+        (isDownloadingUpdate && api.app.updates.cancelAppUpdate) ||
         (isUpdateAvailable && downloadUpdate) ||
         checkForUpdates
     ), [isDownloadingUpdate, isUpdateAvailable, isUpdateReady, checkForUpdates, downloadUpdate]);

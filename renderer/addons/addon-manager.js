@@ -38,14 +38,14 @@ const headerStops = {
 
 const AddonManager = ({ addons, appMain, setAddons, setAddon, wowPath }) => {
     const resync = useCallback(refresh => {
-        api.getInstalledAddons(wowPath, refresh).then(setAddons);
+        api.addons.getInstalledAddons(wowPath, refresh).then(setAddons);
     }, [wowPath]);
     const checkForUpdate = useCallback(() => {
-        api.checkForAddonUpdates().then(setAddons);
+        api.addons.checkForAddonUpdates().then(setAddons);
     });
 
     const updateAddon = useCallback(addon => {
-        api.updateAddon(addon, wowPath)
+        api.addons.updateAddon(addon, wowPath)
             .on('update', payload => setAddon(addon.id, payload))
         ;
     });
