@@ -3,26 +3,34 @@ const EventEmitter = require('events');
 
 contextBridge.exposeInMainWorld('api', {
     // window
-    closeWindow: () => renderer.send('window', 'close'),
-    minimiseWindow: () => renderer.send('window', 'minimise'),
-    fullscreenWindow: () => renderer.send('window', 'toggleFullscreen'),
-    // app
-    cancelAppUpdate: () => renderer.invoke('cancelAppUpdate'),
-    checkForAppUpdate: allowPrerelease => renderer.invoke('checkForAppUpdate', allowPrerelease),
-    downloadAppUpdate: () => renderer.invoke('downloadAppUpdate'),
-    getAppVersion: () => renderer.invoke('getAppVersion'),
-    installAppUpdate: () => renderer.invoke('installAppUpdate'),
+    window: {
+        closeWindow: () => renderer.send('window', 'close'),
+        minimiseWindow: () => renderer.send('window', 'minimise'),
+        fullscreenWindow: () => renderer.send('window', 'toggleFullscreen'),
+    },
+    app: {
+        // app - updates
+        updates: {
+            cancelAppUpdate: () => renderer.invoke('cancelAppUpdate'),
+            checkForAppUpdate: allowPrerelease => renderer.invoke('checkForAppUpdate', allowPrerelease),
+            downloadAppUpdate: () => renderer.invoke('downloadAppUpdate'),
+            getAppVersion: () => renderer.invoke('getAppVersion'),
+            installAppUpdate: () => renderer.invoke('installAppUpdate'),
+        },
+    },
     // client
     findWow: () => renderer.invoke('findWow'),
     // addons
-    checkForAddonUpdates: () => renderer.invoke('checkForAddonUpdates'),
-    getInstalledAddons: (wowPath, refresh) => renderer.invoke('getInstalledAddons', wowPath, refresh),
-    getAddon: curseId => renderer.invoke('getAddonById', curseId),
-    updateAddon: (addon, wowPath) => {
-        const events = new EventEmitter();
-        renderer.on(addon.id, (ev, ...payload) => events.emit('update', ...payload));
-        renderer.invoke('updateAddon', addon, wowPath);
-        return wrapEmitter(events);
+    addons: {
+        checkForAddonUpdates: () => renderer.invoke('checkForAddonUpdates'),
+        getInstalledAddons: (wowPath, refresh) => renderer.invoke('getInstalledAddons', wowPath, refresh),
+        getAddon: curseId => renderer.invoke('getAddonById', curseId),
+        updateAddon: (addon, wowPath) => {
+            const events = new EventEmitter();
+            renderer.on(addon.id, (ev, ...payload) => events.emit('update', ...payload));
+            renderer.invoke('updateAddon', addon, wowPath);
+            return wrapEmitter(events);
+        }
     }
 });
 function wrapEmitter(emitter) {
