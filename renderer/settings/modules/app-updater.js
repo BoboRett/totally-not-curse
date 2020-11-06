@@ -60,6 +60,7 @@ const AppUpdater = () => {
 
     return (
         <div className="app-updater">
+            <h2 className="app-settings__heading">Version</h2>
             <p className="app-settings__entry">
                 <span className="app-settings__entry-heading">Current</span>
                 <span className="app-settings__entry-value_text">{ _.get(appVersion, 'version', 'Fetching version...') }</span>
