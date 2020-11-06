@@ -29,10 +29,14 @@ function createWindow () {
 
     require('./addons.js').handle();
     require('./client.js').handle();
+    require('./protocols.js').handle();
     require('./updates.js').handle(win);
     require('./window.js').handle();
 }
 
+if(!app.requestSingleInstanceLock()) {
+    app.quit();
+} else {
 app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
@@ -46,3 +50,4 @@ app.on('activate', () => {
         createWindow();
     }
 });
+}

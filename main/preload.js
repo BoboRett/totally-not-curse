@@ -9,6 +9,11 @@ contextBridge.exposeInMainWorld('api', {
         fullscreenWindow: () => renderer.send('window', 'toggleFullscreen'),
     },
     app: {
+        // app - protocols
+        protocols: {
+            handleProtocol: scheme => renderer.invoke('handleProtocol', scheme),
+            isProtocolHandled: scheme => renderer.invoke('isProtocolHandled', scheme)
+        },
         // app - updates
         updates: {
             cancelAppUpdate: () => renderer.invoke('cancelAppUpdate'),

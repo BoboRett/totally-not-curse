@@ -5,8 +5,14 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
-    width: @max-content-width;
+    align-items: center;
+    width: @max-content-width * 0.5;
     outline: 1px solid fade(@theme4, 10%);
+
+    &__details {
+        color: @theme4;
+        font-size: 13px;
+    }
 
     &__entry {
         display: flex;
@@ -14,6 +20,7 @@
         width: 100%;
         margin: 12px 0px;
         align-items: flex-end;
+        justify-content: center;
         border-bottom: 2px solid fade(@theme4, 10%);
 
         &-heading {
@@ -23,6 +30,12 @@
         }
 
         &-value {
+            &_button {
+                .base-button();
+
+                margin: 0px auto;
+            }
+
             &_checkbox {
                 .base-checkbox();
 
@@ -34,5 +47,9 @@
             }
 
         }
+    }
+
+    &__heading {
+        color: @theme3;
     }
 }
