@@ -1,11 +1,13 @@
 import React from 'react';
 
-import AppUpdater from './app-updater';
+import AppProtocols from './modules/app-protocols';
+import AppUpdater from './modules/app-updater';
 import './app-settings.less';
 
 const AppSettings = () => {
     return (
         <div className="app-settings">
+            <AppProtocols />
             <AppUpdater />
         </div>
     );
