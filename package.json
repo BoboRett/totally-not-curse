@@ -1,6 +1,6 @@
 {
     "name": "totallynotcurse",
-    "version": "0.1.0",
+    "version": "0.1.1-alpha",
     "main": "main/main.js",
     "author": "BoboRett <BoboRett@users.noreply.github.com>",
     "license": "MIT",
