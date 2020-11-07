@@ -96,17 +96,18 @@
             transition: background-color 50ms;
             white-space: nowrap;
 
-            &__title {
-                color: lighten(@theme4, 10%);
+            > * {
                 padding-top: 4px;
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
 
-            &__authors {
-                padding-top: 4px;
-                overflow: hidden;
-                text-overflow: ellipsis;
+            &__title {
+                color: lighten(@theme4, 10%);
+            }
+
+            &__version {
+                font-size: 12px;
             }
 
             &[data-type="-1"] {
