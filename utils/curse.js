@@ -22,6 +22,14 @@ function getAddonsById(ids) {
     }).then(({ data }) => data);
 }
 
+function getAddonFileManifest(addonId, fileId) {
+    return axios({
+        method: 'GET',
+        baseURL: curseAPI,
+        url: `addon/${addonId}/file/${fileId}`
+    }).then(({ data }) => data);
+}
+
 function getFileByFingerprint(fingerprint) {
     return axios({
         method: 'POST',
@@ -60,6 +68,7 @@ function getFilesByFingerprint(fingerprints, retries) {
 
 module.exports = {
     getAddonById,
+    getAddonFileManifest,
     getAddonsById,
     getFileByFingerprint,
     getFilesByFingerprint
