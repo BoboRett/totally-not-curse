@@ -14,7 +14,8 @@ const ADDON_STATUS = {
     OK: 0,
     UPDATE_AVAIL: 1,
     UPDATE_WAIT: 2,
-    UPDATE_PROG: 3
+    UPDATE_PROG: 3,
+    UPDATE_COMPLETE: 4
 };
 
 const UPDATE_LIMIT = 6;

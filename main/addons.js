@@ -179,7 +179,7 @@ function updateAddon({ addon, wowPath, sender }) {
             ;
         })
         .then(() => {
-            sender.send(addonId, _.assign(addon, { status: ADDON_STATUS.OK }));
+            sender.send(addonId, _.assign(addon, { status: ADDON_STATUS.UPDATE_COMPLETE }));
         })
         .catch(err => {
             console.log(err);
@@ -213,17 +213,22 @@ function handle() {
         ev.sender.send('progress_start', undefined, 'Fetching addons from Curse');
         return curse.getAddonsById(ids)
             .then(addons => {
-                _.forEach(addons, addon => {
-                    const cachedAddon = _.find(cached, { id: addon.id });
-                    cachedAddon.status = _.some(
-                        addon.latestFiles,
-                        file => file.releaseType === cachedAddon.releaseType
+                const curseAddons = _.keyBy(addons, 'id');
+                _.forEach(cached, addon => {
+                    const curseAddon = curseAddons[addon.id];
+                    if(_.isNil(curseAddon)) {
+                        addon.status = ADDON_STATUS.OK;
+                    } else {
+                        addon.status = _.some(
+                            curseAddon.latestFiles,
+                            file => file.releaseType === addon.releaseType
                             && file.gameVersionFlavor === 'wow_retail'
-                            && _.every(file.modules, module => _.find(cachedAddon.folders, { fingerprint: module.fingerprint }))
+                                && _.every(file.modules, module => _.find(addon.folders, { fingerprint: module.fingerprint }))
                     )
                         ? ADDON_STATUS.OK
                         : ADDON_STATUS.UPDATE_AVAIL
                     ;
+                    }
                 });
                 ev.sender.send('progress_end');
                 return cached;

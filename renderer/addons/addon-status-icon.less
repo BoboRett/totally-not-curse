@@ -54,8 +54,8 @@
         transition: 200ms;
     }
 
-    // OK
-    &[data-status="0"] {
+    // OK, COMPLETE
+    &[data-status="0"], &[data-status="4"] {
         color: fade(@theme4, 50%);
         &:before {
             content: '\f00c';
