@@ -8,13 +8,6 @@
         "eslint:recommended",
         "plugin:react/recommended"
     ],
-    "globals": {
-        // lodash
-        "_": "readonly",
-        // electron api
-        "api": "readonly",
-        "events": "readonly"
-    },
     "parserOptions": {
         "ecmaVersion": 10,
         "sourceType": "module",
