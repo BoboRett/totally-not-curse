@@ -83,12 +83,14 @@ const AddonManager = ({ addons, appMain, setAddons, setAddon, wowPath }) => {
                 <colgroup>
                     <col style={{ width: '75px' }} />
                     <col style={{ width: '80%' }} />
+                    <col style={{ width: '120px' }} />
                     <col style={{ width: '20%' }} />
                 </colgroup>
                 <thead>
                     <tr>
                         <th>Status</th>
                         <th>Name</th>
+                        <th>Version</th>
                         <th>Authors</th>
                     </tr>
                 </thead>
@@ -97,6 +99,7 @@ const AddonManager = ({ addons, appMain, setAddons, setAddon, wowPath }) => {
                         <tr className="addon-row" key={addon.id} data-type={addon.type}>
                             <td><AddonStatus addon={addon} onClick={() => updateAddon(addon)} /></td>
                             <td className="addon-row__title">{ addon.name }</td>
+                            <td className="addon-row__version" title={addon.version}>{ addon.version }</td>
                             <td className="addon-row__authors">{ _.map(addon.authors, 'name').join(' ') }</td>
                         </tr>
                     ))}
