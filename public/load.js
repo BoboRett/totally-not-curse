@@ -1,3 +1,4 @@
+/* global api */
 function main() {
     document.querySelector('.titlebar__window-action_minimise')
         .addEventListener('click', api.window.minimiseWindow)

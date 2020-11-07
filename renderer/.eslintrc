@@ -1,0 +1,9 @@
+{
+    "globals": {
+        // lodash
+        "_": "readonly",
+        // electron api
+        "api": "readonly",
+        "events": "readonly"
+    }
+}
