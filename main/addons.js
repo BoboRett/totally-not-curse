@@ -20,11 +20,12 @@ function getAllAddonDirs(wowPath) {
     });
 }
 
-function buildAddon(name, id, type, folders, releaseType) {
+function buildAddon(name, id, type, folders, releaseType, version) {
     return {
         name,
         type,
         id,
+        version,
         folders: _.map(folders, folder => ({ foldername: folder.foldername, fingerprint: folder.fingerprint })),
         status: ADDON_STATUS.OK,
         releaseType: releaseType || ADDON_RELEASE_TYPE.STABLE
@@ -107,7 +108,8 @@ function fetchMissingAddons(addonsByDir, fetchAll, wowPath, sender) {
                             match.id,
                             ADDON_TYPE.REMOVED,
                             match.file.modules,
-                            match.file.releaseType
+                            match.file.releaseType,
+                            match.file.displayName
                         )
                     ;
                     curseAddons[match.id] = addon;
@@ -117,7 +119,9 @@ function fetchMissingAddons(addonsByDir, fetchAll, wowPath, sender) {
                         missingAddon,
                         getCustomId(allAddons),
                         ADDON_TYPE.CUSTOM,
-                        [{ foldername: missingAddon, fingerprint: 0 }]
+                        [{ foldername: missingAddon, fingerprint: 0 }],
+                        ADDON_RELEASE_TYPE.STABLE,
+                        '[custom]'
                     );
                     allAddons.push(addon);
                 }
@@ -158,6 +162,7 @@ function updateAddon({ addon, wowPath, sender }) {
                 })
                     .then(response => {
                         addon.folders = latestFile.modules;
+                        addon.version = latestFile.displayName;
                         return response.data;
                     })
                 ;

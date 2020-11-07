@@ -18,9 +18,9 @@ message Addons {
         string summary = 4;
         string url = 5;
         repeated Author authors = 6;
-        repeated int32 categories = 7;
-        repeated Folder folders = 8;
-        int32 releaseType = 9;
+        repeated Folder folders = 7;
+        int32 releaseType = 8;
+        string version = 9;
     }
 
     repeated Addon addons = 1;
