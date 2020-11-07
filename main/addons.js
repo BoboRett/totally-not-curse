@@ -142,16 +142,20 @@ function fetchMissingAddons(addonsByDir, fetchAll, wowPath, sender) {
     ;
 }
 
-function updateAddon({ addon, wowPath, sender }) {
+function updateAddon({ addon, wowPath, target, sender }) {
     const addonId = _.toString(addon.id);
     sender.send(addonId, { status: ADDON_STATUS.UPDATE_PROG });
-    return curse.getAddonById(addonId)
-        .then(curseAddon => {
-            return _.find(curseAddon.latestFiles, file => (
-                file.releaseType === addon.releaseType
-                    && file.gameVersionFlavor === 'wow_retail'
-            ));
-        })
+    return (
+        target 
+            ? curse.getAddonFileManifest(addon.id, target)
+            : curse.getAddonById(addonId)
+                .then(curseAddon => {
+                    return _.find(curseAddon.latestFiles, file => (
+                        file.releaseType === addon.releaseType
+                            && file.gameVersionFlavor === 'wow_retail'
+                    ));
+                })
+    )
         .then(latestFile => {
             if(!latestFile) {
                 throw new Error('uh ohs, no file found');
@@ -222,12 +226,12 @@ function handle() {
                         addon.status = _.some(
                             curseAddon.latestFiles,
                             file => file.releaseType === addon.releaseType
-                            && file.gameVersionFlavor === 'wow_retail'
+                                && file.gameVersionFlavor === 'wow_retail'
                                 && _.every(file.modules, module => _.find(addon.folders, { fingerprint: module.fingerprint }))
-                    )
-                        ? ADDON_STATUS.OK
-                        : ADDON_STATUS.UPDATE_AVAIL
-                    ;
+                        )
+                            ? ADDON_STATUS.OK
+                            : ADDON_STATUS.UPDATE_AVAIL
+                        ;
                     }
                 });
                 ev.sender.send('progress_end');
@@ -242,9 +246,9 @@ function handle() {
     });
     queue.on('queueCompleted:addonUpdate', cache.saveAddons);
 
-    ipcMain.handle('updateAddon', (ev, addon, wowPath) => {
+    ipcMain.handle('updateAddon', (ev, addon, wowPath, target) => {
         ev.sender.send('' + addon.id, { status: ADDON_STATUS.UPDATE_WAIT });
-        queue.push('addonUpdate', { addon, wowPath, sender: ev.sender });
+        queue.push('addonUpdate', { addon, wowPath, target, sender: ev.sender });
     });
 }
 
