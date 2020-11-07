@@ -7,7 +7,7 @@ import './addon-status-icon.less';
 const AddonStatus = ({ addon, onClick }) => {
     return (
         <span className="addon-status" data-status={addon.status || ADDON_STATUS.OK} onClick={onClick}>
-            <svg className="addon-status__progress" opacity={addon.status >= ADDON_STATUS.UPDATE_WAIT ? 1 : 0}>
+            <svg className="addon-status__progress" opacity={addon.status >= ADDON_STATUS.UPDATE_WAIT && addon.status < ADDON_STATUS.UPDATE_COMPLETE ? 1 : 0}>
                 <circle
                     className="addon-status__progress-bg"
                     cx="50%"
