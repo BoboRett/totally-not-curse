@@ -186,7 +186,7 @@ function updateAddon({ addon, wowPath, target, sender }) {
             sender.send(addonId, _.assign(addon, { status: ADDON_STATUS.UPDATE_COMPLETE }));
         })
         .catch(err => {
-            console.log(err);
+            sender.send('error', `Failed to update ${addon.name}: ${err.message}`);
         })
     ;
 }
