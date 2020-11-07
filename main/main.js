@@ -18,11 +18,18 @@ function createWindow () {
         }
     });
 
+    
     if(isDev) {
-        // hot reload on directory changes
-        require('electron-reload')(path.resolve(__dirname, './renderer'));
-        win.webContents.openDevTools();
-        win.loadURL('http://localhost:8080');
+        const installExtension = require('electron-devtools-installer').default;
+        const REACT_DEVELOPER_TOOLS = require('electron-devtools-installer').REACT_DEVELOPER_TOOLS;
+        installExtension(REACT_DEVELOPER_TOOLS)
+            .then((name) => console.log(`Added Extension:  ${name}`))
+            .catch((err) => console.log('An error occurred: ', err))
+            .then(() => {
+                win.webContents.openDevTools();
+                win.loadURL('http://localhost:8080');
+            })
+        ;
     } else {
         win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`);
     }
@@ -37,17 +44,17 @@ function createWindow () {
 if(!app.requestSingleInstanceLock()) {
     app.quit();
 } else {
-app.whenReady().then(createWindow);
+    app.whenReady().then(createWindow);
 
-app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
-});
+    app.on('window-all-closed', () => {
+        if (process.platform !== 'darwin') {
+            app.quit();
+        }
+    });
 
-app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-        createWindow();
-    }
-});
+    app.on('activate', () => {
+        if (BrowserWindow.getAllWindows().length === 0) {
+            createWindow();
+        }
+    });
 }

@@ -4,9 +4,9 @@ const EventEmitter = require('events');
 contextBridge.exposeInMainWorld('api', {
     // window
     window: {
-        closeWindow: () => renderer.send('window', 'close'),
-        minimiseWindow: () => renderer.send('window', 'minimise'),
-        fullscreenWindow: () => renderer.send('window', 'toggleFullscreen'),
+        closeWindow: () => renderer.invoke('window', 'close'),
+        minimiseWindow: () => renderer.invoke('window', 'minimise'),
+        fullscreenWindow: () => renderer.invoke('window', 'toggleFullscreen'),
     },
     app: {
         // app - protocols

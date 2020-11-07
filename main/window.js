@@ -2,7 +2,7 @@ const { ipcMain } = require('electron');
 const BrowserWindow = require('electron').BrowserWindow;
 
 function handle() {
-    ipcMain.on('window', (ev, action) => {
+    ipcMain.handle('window', (ev, action) => {
         const win = BrowserWindow.fromWebContents(ev.sender);
         switch(action) {
             case 'close':
