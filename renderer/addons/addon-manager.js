@@ -1,7 +1,7 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useMemo } from 'react';
 
 import AddonStatus from './addon-status-icon';
 import { setAddons, setAddon } from '../store/addons';
@@ -37,6 +37,9 @@ const headerStops = {
 };
 
 const AddonManager = ({ addons, appMain, setAddons, setAddon, wowPath }) => {
+    const sortedAddons = useMemo(() => {
+        return _.orderBy(addons, [addon => addon.status === 0, 'name']);
+    }, [addons]);
     const resync = useCallback(refresh => {
         api.addons.getInstalledAddons(wowPath, refresh).then(setAddons);
     }, [wowPath]);
@@ -95,7 +98,7 @@ const AddonManager = ({ addons, appMain, setAddons, setAddon, wowPath }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    { _.map(addons, addon => (
+                    { _.map(sortedAddons, addon => (
                         <tr className="addon-row" key={addon.id} data-type={addon.type}>
                             <td><AddonStatus addon={addon} onClick={() => updateAddon(addon)} /></td>
                             <td className="addon-row__title">{ addon.name }</td>
