@@ -1,11 +1,6 @@
 syntax = "proto3";
 
 message Addons {
-    message Author {
-        string name = 1;
-        string url = 2;
-    }
-
     message Folder {
         string foldername = 1;
         int32 fingerprint = 2;
@@ -17,7 +12,7 @@ message Addons {
         string name = 3;
         string summary = 4;
         string url = 5;
-        repeated Author authors = 6;
+        repeated string authors = 6;
         repeated Folder folders = 7;
         int32 releaseType = 8;
         string version = 9;
