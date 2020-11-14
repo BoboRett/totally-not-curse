@@ -1,7 +1,8 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import React, { useEffect, useCallback, useMemo } from 'react';
+import React, { useEffect, useCallback, useMemo, useState } from 'react';
+import { CSSTransition } from 'react-transition-group';
 
 import AddonStatus from './addon-status-icon';
 import { setAddons, setAddon } from '../store/addons';
@@ -24,7 +25,7 @@ const headerStops = {
     },
     100: {
         main: {
-            minHeight: 64,
+            minHeight: 65,
             background: 'linear-gradient(-45deg, rgb(27, 27, 27), rgb(7, 12, 11)) fixed'
         },
         controls: {
@@ -34,6 +35,36 @@ const headerStops = {
             opacity: 0
         }
     }
+};
+
+const AddonRow = ({ addon, onUpdate }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const onToggleOpen = useCallback(() => {
+        setIsOpen(currentOpen => !currentOpen);
+    }, []);
+    const onStatusClick = useCallback(event => {
+        event.stopPropagation();
+        onUpdate(addon);
+    }, [addon, onUpdate]);
+    return (
+        <>
+            <CSSTransition in={!isOpen} timeout={200}>
+                <div className="addon-row" key={addon.id} data-type={addon.type} onClick={onToggleOpen}>
+                    <span className="addon-row__status"><AddonStatus addon={addon} onClick={onStatusClick} /></span>
+                    <span className="addon-row__title">{ addon.name }</span>
+                    <span className="addon-row__version" title={addon.version}>{ addon.version }</span>
+                    <span className="addon-row__authors">{ _.map(addon.authors, 'name').join(' ') }</span>
+                </div>
+            </CSSTransition>
+            <CSSTransition in={isOpen} timeout={200} mountOnEnter>
+                <div className="addon-large-row" key={addon.id} data-type={addon.type}>
+                    <h1 onClick={onToggleOpen}>{ addon.name } - { addon.version }</h1>
+                    <span>{ _.map(addon.authors, 'name').join(' ') }</span>
+                    <span className="addon-large-row__close" onClick={onToggleOpen}>{'\uf106'}</span>
+                </div>
+            </CSSTransition>
+        </>
+    );
 };
 
 const AddonManager = ({ addons, appMain, setAddons, setAddon, wowPath }) => {
@@ -82,32 +113,21 @@ const AddonManager = ({ addons, appMain, setAddons, setAddon, wowPath }) => {
                     </div>
                 )}
             </Transitioner>
-            <table className="addon-manager__table">
-                <colgroup>
-                    <col style={{ width: '75px' }} />
-                    <col style={{ width: '80%' }} />
-                    <col style={{ width: '120px' }} />
-                    <col style={{ width: '20%' }} />
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th>Status</th>
-                        <th>Name</th>
-                        <th>Version</th>
-                        <th>Authors</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    { _.map(sortedAddons, addon => (
-                        <tr className="addon-row" key={addon.id} data-type={addon.type}>
-                            <td><AddonStatus addon={addon} onClick={() => updateAddon(addon)} /></td>
-                            <td className="addon-row__title">{ addon.name }</td>
-                            <td className="addon-row__version" title={addon.version}>{ addon.version }</td>
-                            <td className="addon-row__authors">{ _.map(addon.authors, 'name').join(' ') }</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <div className="addon-manager__table">
+                <div className="addon-manager__table-head">
+                    <span>Status</span>
+                    <span>Name</span>
+                    <span>Version</span>
+                    <span>Authors</span>
+                </div>
+                { _.map(sortedAddons, addon => (
+                    <AddonRow
+                        key={addon.id}
+                        addon={addon}
+                        onUpdate={updateAddon}
+                    />
+                ))}
+            </div>
         </div>
     );
 };
@@ -120,6 +140,11 @@ const mapStateToProps = state => ({
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({ setAddons, setAddon }, dispatch);
 }
+
+AddonRow.propTypes = {
+    addon: PropTypes.object,
+    onUpdate: PropTypes.func
+};
 
 AddonManager.propTypes = {
     addons: PropTypes.arrayOf(PropTypes.object),

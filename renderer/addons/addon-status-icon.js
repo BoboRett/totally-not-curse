@@ -12,14 +12,14 @@ const AddonStatus = ({ addon, onClick }) => {
                     className="addon-status__progress-bg"
                     cx="50%"
                     cy="50%"
-                    r="38%"
+                    r="25%"
                 />
                 <circle
                     className={`addon-status__progress-fill ${addon.status === ADDON_STATUS.UPDATE_PROG && _.isNil(addon.updateProgress) ? 'indeterminate' : ''}`}
                     cx="50%"
                     cy="50%"
-                    r="38%"
-                    strokeDashoffset={98 - (addon.updateProgress || 0)}
+                    r="25%"
+                    strokeDashoffset={98 - ((addon.updateProgress * 98) || 0)}
                 />
             </svg>
         </span>
