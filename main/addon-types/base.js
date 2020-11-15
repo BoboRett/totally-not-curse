@@ -49,6 +49,10 @@ class Addon {
         this.version = version;
     }
 
+    uninstall(wowPath) {
+        return Promise.resolve().then(() => this.removeFiles(wowPath));
+    }
+
     update() {}
 }
 
