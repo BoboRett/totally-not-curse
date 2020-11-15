@@ -97,6 +97,16 @@ function installAddon(ev, wowPath, type, ...args) {
     ;
 }
 
+function uninstallAddon(ev, wowPath, addon) {
+    ev.sender.send('progress_start', undefined, 'Removing addon');
+    return AddonHelpers.fromState(addon).uninstall(wowPath)
+        .then(() => {
+            setTimeout(cache.saveAddons, 500);
+            ev.sender.send('progress_end');
+        })
+    ;
+}
+
 function updateAddon({ addon, wowPath, target, sender }) {
     const addonId = _.toString(addon.id);
     const parsedAddon = fromState(addon);
@@ -110,6 +120,7 @@ function handle() {
     ipcMain.handle('getInstalledAddons', getInstalledAddons);
 
     ipcMain.handle('installAddon', installAddon);
+    ipcMain.handle('uninstallAddon', uninstallAddon);
 
     ipcMain.handle('checkForAddonUpdates', checkForUpdates);
 

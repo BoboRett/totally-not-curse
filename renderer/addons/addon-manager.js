@@ -5,7 +5,7 @@ import React, { useEffect, useCallback, useMemo, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 
 import AddonStatus from './addon-status-icon';
-import { setAddons, setAddon } from '../store/addons';
+import { removeAddon, setAddons, setAddon } from '../store/addons';
 import { ADDON_STATUS } from '../../utils/constants';
 import './addon-manager.less';
 import Transitioner from '../transitioner/transitioner';
@@ -37,7 +37,7 @@ const headerStops = {
     }
 };
 
-const AddonRow = ({ addon, onUpdate }) => {
+const AddonRow = ({ addon, onUpdate, onUninstall }) => {
     const [isOpen, setIsOpen] = useState(false);
     const onToggleOpen = useCallback(() => {
         setIsOpen(currentOpen => !currentOpen);
@@ -46,6 +46,10 @@ const AddonRow = ({ addon, onUpdate }) => {
         event.stopPropagation();
         onUpdate(addon);
     }, [addon, onUpdate]);
+    const onUninstallAddon = useCallback(event => {
+        event.stopPropagation();
+        onUninstall(addon);
+    }, [addon, onUninstall]);
     return (
         <>
             <CSSTransition in={!isOpen} timeout={200}>
@@ -60,6 +64,7 @@ const AddonRow = ({ addon, onUpdate }) => {
                 <div className="addon-large-row" key={addon.id} data-type={addon.type}>
                     <h1 onClick={onToggleOpen}>{ addon.name } - { addon.version }</h1>
                     <span>{ _.map(addon.authors, 'name').join(' ') }</span>
+                    <button className="addon-large-row__remove" onClick={onUninstallAddon}>Remove addon</button>
                     <span className="addon-large-row__close" onClick={onToggleOpen}>{'\uf106'}</span>
                 </div>
             </CSSTransition>
@@ -67,7 +72,7 @@ const AddonRow = ({ addon, onUpdate }) => {
     );
 };
 
-const AddonManager = ({ addons, appMain, setAddons, setAddon, wowPath }) => {
+const AddonManager = ({ addons, appMain, removeAddon, setAddons, setAddon, wowPath }) => {
     const sortedAddons = useMemo(() => {
         return _.orderBy(addons, [addon => addon.status === 0, 'name']);
     }, [addons]);
@@ -81,6 +86,11 @@ const AddonManager = ({ addons, appMain, setAddons, setAddon, wowPath }) => {
     const updateAddon = useCallback(addon => {
         api.addons.updateAddon(addon, wowPath)
             .on('update', payload => setAddon(addon.id, payload))
+        ;
+    });
+    const uninstallAddon = useCallback(addon => {
+        api.addons.uninstallAddon(wowPath, addon)
+            .then(() => removeAddon(addon))
         ;
     });
     const updateAll = () => {
@@ -125,6 +135,7 @@ const AddonManager = ({ addons, appMain, setAddons, setAddon, wowPath }) => {
                         key={addon.id}
                         addon={addon}
                         onUpdate={updateAddon}
+                        onUninstall={uninstallAddon}
                     />
                 ))}
             </div>
@@ -138,17 +149,19 @@ const mapStateToProps = state => ({
 });
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ setAddons, setAddon }, dispatch);
+    return bindActionCreators({ removeAddon, setAddons, setAddon }, dispatch);
 }
 
 AddonRow.propTypes = {
     addon: PropTypes.object,
-    onUpdate: PropTypes.func
+    onUpdate: PropTypes.func,
+    onUninstall: PropTypes.func
 };
 
 AddonManager.propTypes = {
     addons: PropTypes.arrayOf(PropTypes.object),
     appMain: PropTypes.object,
+    removeAddon: PropTypes.func,
     setAddons: PropTypes.func,
     setAddon: PropTypes.func,
     wowPath: PropTypes.string

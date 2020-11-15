@@ -195,6 +195,22 @@
                     background-color: fade(@theme4, 5%);
                 }
             }
+
+            &__remove {
+                .base-button();
+
+                position: relative;
+                width: 200px;
+
+                &:before {
+                    content: '\f2ed';
+                    height: 100%;
+                    padding: 0px 8px;
+                    display: flex;
+                    align-items: center;
+                    font-family: FontAwesome;
+                }
+            }
         }
     }
 }
