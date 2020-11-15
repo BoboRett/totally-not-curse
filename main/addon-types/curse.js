@@ -4,7 +4,6 @@ const curse = require('../../utils/curse');
 const path = require('path');
 const { Pool, spawn, Worker } = require('threads');
 const _ = require('lodash');
-const axios = require('axios');
 
 class CurseAddon extends Addon {
     constructor() {
@@ -63,49 +62,65 @@ class CurseAddon extends Addon {
             state.releaseType,
             state.version,
             state.summary,
-            state.url
+            state.url,
+            state.authors
         );
     }
 
-    update(wowPath, targetFingerprint, progressReporter) {
-        const addonId = _.toString(this.id);
-        progressReporter.send(addonId, { status: ADDON_STATUS.UPDATE_PROG });
-        const fileGetter = (
-            targetFingerprint 
-                ? curse.getAddonFileManifest(this.id, targetFingerprint)
-                : curse.getAddonById(this.id)
-                    .then(curseAddon => {
-                        return _.find(curseAddon.latestFiles, file => (
-                            file.releaseType === this.releaseType
-                                && file.gameVersionFlavor === 'wow_retail'
-                        ));
-                    })
-        );
-        return fileGetter
-            .then(latestFile => {
-                if(!latestFile) {
-                    throw new Error('uh ohs, no file found');
-                } else {
-                    return axios.get(latestFile.downloadUrl, {
-                        responseType: 'stream'
-                    })
-                        .then(response => {
-                            this.folders = latestFile.modules;
-                            this.version = latestFile.displayName;
-                            this.releaseType = latestFile.releaseType;
-                            return response.data;
-                        })
+    static async getDetailsFromUrl(url) {
+        const addonId = url.searchParams.get('addonId');
+        const fileId = url.searchParams.get('fileId');
+        if(!addonId) { return null; }
+        const addon = await curse.getAddonById(addonId);
+        addon.file = fileId
+            ? await curse.getAddonFileManifest(addonId, fileId)
+            : await curse.getLatestFile(addonId)
+        ;
+        const requiredDependencies = _.filter(addon.file.dependencies, { type: 3 });
+        addon.dependencies = requiredDependencies.length
+            ? await curse.getAddonsById(_.map(requiredDependencies, 'addonId'))
+            : []
+        ;
+        addon.type = ADDON_TYPE.CURSE;
+        return addon;
+    }
+
+    static async install(sender, wowPath, addonId, fileId, skipDependencies) {
+        const addonInfo = await curse.getAddonById(addonId);
+        const { manifest, file } = await curse.getAddonFile(addonId, fileId);
+        const addon = new CurseAddon(addonInfo.name, addonId);
+        addon.folders = manifest.modules;
+        addon.version = manifest.displayName;
+        addon.releaseType = manifest.releaseType;
+        addon.authors = _.map(addonInfo.authors, 'name');
+        const dependencies = skipDependencies ? [] : await Promise.all(
+            _(manifest.dependencies)
+                .filter({ type: 3 })
+                .map(dep => {
+                    return curse.getLatestFile(dep.addonId)
+                        .then(latestFile => CurseAddon.install(sender, wowPath, dep.addonId, latestFile.id))
                     ;
-                }
+                })
+        );
+        return addon.replaceFiles(file, wowPath)
+            .catch(err => {
+                sender.send('error', `Failed to install ${addon.name}: ${err.message}`);
             })
-            .then(zipStream => this.replaceFiles(zipStream, wowPath, progressReporter))
-            .then(() => {
-                this.setStatus(ADDON_STATUS.UPDATE_COMPLETE);
-                this.updateProgress = 1;
-                progressReporter.send(addonId, this);
+            .then(() => _.flatten(_.concat(dependencies, addon)))
+        ;
+    }
+
+    async update(wowPath, targetFile, sender) {
+        const addonId = _.toString(this.id);
+        sender.send(addonId, { status: ADDON_STATUS.UPDATE_PROG });
+        targetFile = targetFile  || (await curse.getLatestFile(this.id, this.releaseType)).id;
+        return CurseAddon.install(sender, wowPath, this.id, targetFile, true)
+            .then(updated => {
+                updated[0].setStatus(ADDON_STATUS.UPDATE_COMPLETE);
+                sender.send(addonId, updated[0]);
             })
             .catch(err => {
-                progressReporter.send('error', `Failed to update ${this.name}: ${err.message}`);
+                sender.send('error', `Failed to update ${this.name}: ${err.message}`);
             })
         ;
     }
