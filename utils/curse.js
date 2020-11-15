@@ -1,5 +1,6 @@
 const axios = require('axios');
 const _ = require('lodash');
+const { ADDON_RELEASE_TYPE } = require('./constants');
 
 const curseAPI = 'https://addons-ecs.forgesvc.net/api/v2/';
 
@@ -20,6 +21,12 @@ function getAddonsById(ids) {
         url: '/addon',
         data: ids
     }).then(({ data }) => data);
+}
+
+async function getAddonFile(addonId, fileId) {
+    const manifest = await getAddonFileManifest(addonId, fileId);
+    const file = await axios(manifest.downloadUrl, { responseType: 'stream' }).then(({ data }) => data);
+    return { manifest, file };
 }
 
 function getAddonFileManifest(addonId, fileId) {
@@ -66,10 +73,23 @@ function getFilesByFingerprint(fingerprints, retries) {
     ;
 }
 
+function getLatestFile(addonId, releaseType = ADDON_RELEASE_TYPE.STABLE) {
+    return getAddonById(addonId)
+        .then(curseAddon => {
+            return _.find(curseAddon.latestFiles, file => (
+                file.releaseType === releaseType
+                    && file.gameVersionFlavor === 'wow_retail'
+            ));
+        })
+    ;
+}
+
 module.exports = {
     getAddonById,
+    getAddonFile,
     getAddonFileManifest,
     getAddonsById,
     getFileByFingerprint,
-    getFilesByFingerprint
+    getFilesByFingerprint,
+    getLatestFile
 };

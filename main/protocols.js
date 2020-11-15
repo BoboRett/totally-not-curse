@@ -3,7 +3,21 @@ const isDev = require('electron-is-dev');
 const path = require('path');
 const _ = require('lodash');
 
-function handle() {
+function getPageUrl(url) {
+    const pageUrl = isDev ? 'http://localhost:8080/' : `file://${path.join(__dirname, '../build/index.html')}`;
+    let route = '';
+    try {
+        const parsed = new URL(url);
+        if(parsed.protocol === 'curseforge:') {
+            route = `#/addons/get?url=${encodeURIComponent(url)}`;
+        }
+    } catch(err) {
+        route = '';
+    }
+    return pageUrl + route;
+}
+
+function handle(window) {
     app.removeAsDefaultProtocolClient('twitch');
 
     ipcMain.handle('isProtocolHandled', (ev, scheme) => {
@@ -21,8 +35,9 @@ function handle() {
 
     app.on('second-instance', (ev, args) => {
         const url = _.last(args);
-        console.log(url);
+        window.loadURL(getPageUrl(url));
+        window.focus();
     });
 }
 
-module.exports = { handle };
+module.exports = { getPageUrl, handle };

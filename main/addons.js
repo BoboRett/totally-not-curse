@@ -1,4 +1,3 @@
-const curse = require('../utils/curse');
 const cache = require('./cache');
 const { ipcMain } = require('electron');
 const fs = require('fs-extra');
@@ -76,6 +75,28 @@ function fetchMissingAddons(addonsByDir, fetchAll, wowPath, sender) {
     ;
 }
 
+function getAddonDetails(ev, url) {
+    try {
+        const parsed = new URL(url);
+        return AddonHelpers.constructorFromUrl(parsed).getDetailsFromUrl(parsed)
+            .catch(() => null)
+        ;
+    } catch(err) {
+        return null;
+    }
+}
+
+function installAddon(ev, wowPath, type, ...args) {
+    ev.sender.send('progress_start', undefined, 'Installing addon');
+    return AddonHelpers.constructorFromType(type).install(ev.sender, wowPath, ...args)
+        .then(addons => {
+            setTimeout(cache.saveAddons, 500);
+            ev.sender.send('progress_end');
+            return addons;
+        })
+    ;
+}
+
 function updateAddon({ addon, wowPath, target, sender }) {
     const addonId = _.toString(addon.id);
     const parsedAddon = fromState(addon);
@@ -84,11 +105,11 @@ function updateAddon({ addon, wowPath, target, sender }) {
 }
 
 function handle() {
-    ipcMain.handle('getAddonById', (ev, curseId) => {
-        return curse.getAddonById(curseId);
-    });
+    ipcMain.handle('getAddonDetails', getAddonDetails);
 
     ipcMain.handle('getInstalledAddons', getInstalledAddons);
+
+    ipcMain.handle('installAddon', installAddon);
 
     ipcMain.handle('checkForAddonUpdates', checkForUpdates);
 
