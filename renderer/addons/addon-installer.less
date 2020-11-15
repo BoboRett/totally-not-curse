@@ -1,0 +1,25 @@
+@import (reference) '../variables.less';
+
+.addon-installer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin: 60px auto;
+    max-width: @max-content-width;
+
+    &__install {
+        .base-button();
+    }
+
+    &__url-input {
+        .base-text-input();
+
+        width: 80%;
+
+        input {
+            width: 100%;
+            text-align: center;
+        }
+    }
+}

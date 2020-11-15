@@ -53,7 +53,7 @@ const AddonRow = ({ addon, onUpdate }) => {
                     <span className="addon-row__status"><AddonStatus addon={addon} onClick={onStatusClick} /></span>
                     <span className="addon-row__title">{ addon.name }</span>
                     <span className="addon-row__version" title={addon.version}>{ addon.version }</span>
-                    <span className="addon-row__authors">{ _.map(addon.authors, 'name').join(' ') }</span>
+                    <span className="addon-row__authors">{ addon.authors.join(' ') }</span>
                 </div>
             </CSSTransition>
             <CSSTransition in={isOpen} timeout={200} mountOnEnter>

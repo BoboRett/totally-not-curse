@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef } from 'react';
 
+import AddonInstaller from './addons/addon-installer';
 import AddonManager from './addons/addon-manager';
 import AppSettings from './settings/app-settings';
 import ErrorDialog from './error-dialog/error-dialog';
@@ -27,6 +28,9 @@ const App = ({ setPaths }) => {
                 <Switch>
                     <Route exact path="/addons">
                         <AddonManager appMain={appMain} />
+                    </Route>
+                    <Route exact path="/addons/get">
+                        <AddonInstaller />
                     </Route>
                     <Route exact path="/settings">
                         <AppSettings />
