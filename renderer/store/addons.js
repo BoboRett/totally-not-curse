@@ -1,6 +1,8 @@
 export default {
     reducer: function(state = [], action) {
         switch(action.type) {
+            case 'ADD_ADDONS':
+                return _.uniqBy(_.concat(state, action.addons), 'id');
             case 'SET_ALL_ADDONS':
                 return action.addons;
             case 'SET_ADDON':
@@ -28,5 +30,12 @@ export function setAddon(addonId, payload) {
         type: 'SET_ADDON',
         addonId,
         payload
+    };
+}
+
+export function addAddons(addons) {
+    return {
+        type: 'ADD_ADDONS',
+        addons
     };
 }
