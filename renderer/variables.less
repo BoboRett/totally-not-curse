@@ -87,3 +87,36 @@
         }
     }
 }
+
+.base-text-input() {
+    position: relative;
+    border-bottom: 1px solid @theme2;
+    transition: border-bottom 200ms;
+
+    input {
+        padding: 8px;
+        background: none;
+        border: none;
+        color: @theme4;
+        font: inherit;
+        font-size: 18px;
+        outline: none;
+    }
+
+    &:focus-within {
+        border-bottom: 1px solid @theme3;
+    }
+
+    &:before {
+        content: '\f303';
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        color: @theme3;
+        cursor: text;
+        font-family: FontAwesome;
+    }
+}
