@@ -1,6 +1,8 @@
 const { app, BrowserWindow } = require('electron');
 const isDev = require('electron-is-dev');
 const path = require('path');
+const protocols = require('./protocols.js');
+const _ = require('lodash');
 process.env.ELECTRON_DEV = isDev;
 
 function createWindow () {
@@ -18,7 +20,8 @@ function createWindow () {
         }
     });
 
-    
+    const url = _.last(process.argv);
+    const pageUrl = protocols.getPageUrl(url);
     if(isDev) {
         const installExtension = require('electron-devtools-installer').default;
         const REACT_DEVELOPER_TOOLS = require('electron-devtools-installer').REACT_DEVELOPER_TOOLS;
@@ -27,16 +30,16 @@ function createWindow () {
             .catch((err) => console.log('An error occurred: ', err))
             .then(() => {
                 win.webContents.openDevTools();
-                win.loadURL('http://localhost:8080');
+                win.loadURL(pageUrl);
             })
         ;
     } else {
-        win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`);
+        win.loadURL(pageUrl);
     }
 
     require('./addons.js').handle();
     require('./client.js').handle();
-    require('./protocols.js').handle();
+    protocols.handle(win);
     require('./updates.js').handle(win);
     require('./window.js').handle();
 }

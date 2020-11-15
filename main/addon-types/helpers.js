@@ -9,6 +9,18 @@ const TypeMap = {
     '1': CurseAddon
 };
 
+const ProtocolMap = {
+    'curseforge:': CurseAddon
+};
+
+function constructorFromType(type) {
+    return TypeMap[type];
+}
+
+function constructorFromUrl(url) {
+    return ProtocolMap[url.protocol];
+}
+
 function parseCache(cached) {
     return _.map(cached, fromState);
 }
@@ -59,7 +71,9 @@ function fromState(addon) {
 
 module.exports = {
     fromDirs,
+    constructorFromUrl,
     fromState,
+    constructorFromType,
     parseCache,
     taskPerAddonGroup
 };
