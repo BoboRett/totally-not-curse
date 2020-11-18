@@ -5,6 +5,7 @@ import React, { useEffect, useCallback, useMemo, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 
 import AddonStatus from './addon-status-icon';
+import ConfirmButton from '../components/confirm-button';
 import { removeAddon, setAddons, setAddon } from '../store/addons';
 import { ADDON_STATUS, ADDON_TYPE } from '../../utils/constants';
 import './addon-manager.less';
@@ -68,7 +69,7 @@ const AddonRow = ({ addon, onUpdate, onUninstall }) => {
                         <button className="addon-large-row__home" onClick={() => api.window.open(addon.url)}>
                             { addon.type === ADDON_TYPE.CUSTOM ? 'Folder' : 'Website' }
                         </button>
-                        <button className="addon-large-row__remove" onClick={onUninstallAddon}>Uninstall</button>
+                        <ConfirmButton className="addon-large-row__remove" onClick={onUninstallAddon}>Uninstall</ConfirmButton>
                     </div>
                     <span className="addon-large-row__close" onClick={onToggleOpen}>{'\uf106'}</span>
                 </div>
@@ -79,7 +80,7 @@ const AddonRow = ({ addon, onUpdate, onUninstall }) => {
 
 const AddonManager = ({ addons, appMain, removeAddon, setAddons, setAddon, wowPath }) => {
     const sortedAddons = useMemo(() => {
-        return _.orderBy(addons, [addon => addon.status === 0, 'name']);
+        return _.orderBy(addons, [addon => addon.status > 0, 'name'], ['desc', 'asc']);
     }, [addons]);
     const resync = useCallback(refresh => {
         api.addons.getInstalledAddons(wowPath, refresh).then(setAddons);
