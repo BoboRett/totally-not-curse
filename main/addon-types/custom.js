@@ -1,6 +1,7 @@
 const { ADDON_TYPE, ADDON_RELEASE_TYPE } = require('../../utils/constants');
 const Addon = require('./base');
 const crypto = require('crypto');
+const path = require('path');
 const _ = require('lodash');
 
 class CustomAddon extends Addon {
@@ -22,6 +23,7 @@ class CustomAddon extends Addon {
                 '-',
                 'Custom addon'
             );
+            addon.url = path.join(wowPath, 'Interface/addons', dir);
             matches.matched.push(addon);
         }, { matched: [], unmatched: [] });
     }
