@@ -1,8 +1,8 @@
-const { ADDON_STATUS, ADDON_RELEASE_TYPE } = require('../../utils/constants');
-const fse = require('fs-extra');
+const { ADDON_RELEASE_TYPE } = require('../../utils/constants');
 const path = require('path');
 const unzipper = require('unzipper');
 const _ = require('lodash');
+const { shell } = require('electron');
 
 class Addon {
     constructor(type, name, id, folders, releaseType, version, summary, url, authors) {
@@ -18,13 +18,12 @@ class Addon {
         this.url = url || '';
         this.setReleaseType(releaseType || ADDON_RELEASE_TYPE.STABLE);
         this.setVersion(version || '1.0.0');
-        this.setStatus(ADDON_STATUS.OK);
     }
 
     removeFiles(basePath) {
         const addonPath = path.join(basePath, 'Interface/addons');
         _.forEach(this.folders, folder => {
-            fse.removeSync(path.join(addonPath, folder.foldername));
+            shell.moveItemToTrash(path.join(addonPath, folder.foldername));
         });
     }
 
