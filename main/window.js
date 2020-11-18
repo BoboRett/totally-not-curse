@@ -1,23 +1,10 @@
-const { ipcMain } = require('electron');
-const BrowserWindow = require('electron').BrowserWindow;
+const { ipcMain, shell } = require('electron');
 
-function handle() {
-    ipcMain.handle('window', (ev, action) => {
-        const win = BrowserWindow.fromWebContents(ev.sender);
-        switch(action) {
-            case 'close':
-                win.destroy();
-                break;
-            case 'minimise':
-                win.minimize();
-                break;
-            case 'toggleFullscreen':
-                win.isMaximized() ? win.unmaximize() : win.maximize();
-                break;
-            default:
-                console.warn('No window action specified!');
-        }
-    });
+function handle(window) {
+    ipcMain.handle('close', () => window.destroy());
+    ipcMain.handle('minimise', () => window.minimize());
+    ipcMain.handle('toggleFullscreen', () => window.isMaximized() ? window.unmaximize() : window.maximize());
+    ipcMain.handle('open', (sender, url) => shell.openExternal(url));
 }
 
 module.exports = { handle };

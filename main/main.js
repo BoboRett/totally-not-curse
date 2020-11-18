@@ -41,7 +41,7 @@ function createWindow () {
     require('./client.js').handle();
     protocols.handle(win);
     require('./updates.js').handle(win);
-    require('./window.js').handle();
+    require('./window.js').handle(win);
 }
 
 if(!app.requestSingleInstanceLock()) {
