@@ -89,10 +89,12 @@ class CurseAddon extends Addon {
         const addonInfo = await curse.getAddonById(addonId);
         const { manifest, file } = await curse.getAddonFile(addonId, fileId);
         const addon = new CurseAddon(addonInfo.name, addonId);
+        addon.authors = _.map(addonInfo.authors, 'name');
         addon.folders = manifest.modules;
         addon.version = manifest.displayName;
         addon.releaseType = manifest.releaseType;
-        addon.authors = _.map(addonInfo.authors, 'name');
+        addon.summary = addonInfo.summary;
+        addon.url = addonInfo.websiteUrl;
         const dependencies = skipDependencies ? [] : await Promise.all(
             _(manifest.dependencies)
                 .filter({ type: 3 })

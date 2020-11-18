@@ -56,7 +56,16 @@
     transition: 75ms;
 
     &:before {
-        margin-top: -6px;
+        margin-top: -5px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        font-family: FontAwesome;
+        font-size: 1.3em;
+    }
+
+    &:not(:empty):before {
+        padding-right: 8px;
     }
 
     &[disabled] {

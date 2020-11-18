@@ -6,7 +6,7 @@ import { CSSTransition } from 'react-transition-group';
 
 import AddonStatus from './addon-status-icon';
 import { removeAddon, setAddons, setAddon } from '../store/addons';
-import { ADDON_STATUS } from '../../utils/constants';
+import { ADDON_STATUS, ADDON_TYPE } from '../../utils/constants';
 import './addon-manager.less';
 import Transitioner from '../transitioner/transitioner';
 
@@ -64,7 +64,12 @@ const AddonRow = ({ addon, onUpdate, onUninstall }) => {
                 <div className="addon-large-row" key={addon.id} data-type={addon.type}>
                     <h1 onClick={onToggleOpen}>{ addon.name } - { addon.version }</h1>
                     <span>{ _.map(addon.authors, 'name').join(' ') }</span>
-                    <button className="addon-large-row__remove" onClick={onUninstallAddon}>Remove addon</button>
+                    <div className="addon-large-row__actions">
+                        <button className="addon-large-row__home" onClick={() => api.window.open(addon.url)}>
+                            { addon.type === ADDON_TYPE.CUSTOM ? 'Folder' : 'Website' }
+                        </button>
+                        <button className="addon-large-row__remove" onClick={onUninstallAddon}>Uninstall</button>
+                    </div>
                     <span className="addon-large-row__close" onClick={onToggleOpen}>{'\uf106'}</span>
                 </div>
             </CSSTransition>
