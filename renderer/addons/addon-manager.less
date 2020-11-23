@@ -87,21 +87,44 @@
 
         .addon-row, .addon-large-row {
             position: relative;
+            border-top: 2px solid @theme0;
             color: @theme4;
             font-size: 14px;
             overflow: hidden;
             transition: 200ms, background-color 50ms;
+
+            > * {
+                pointer-events: none;
+            }
+
+            &:after {
+                content: '\f107';
+                font-family: FontAwesome;
+                width: 15px;
+                height: 15px;
+                position: absolute;
+                left: 50%;
+                bottom: 0%;
+                opacity: 0;
+                transition: 300ms;
+                transform: translate(-25%);
+            }
+
+            &:hover {
+                &:after {
+                    opacity: 1;
+                }
+            }
         }
 
         .addon-row {
-            height: 36px;
+            height: 30px;
             align-items: center;
-            border-top: 2px solid @theme0;
             padding: 4px 0px 2px 0px;
             white-space: nowrap;
 
             &.enter-done, &.enter-active {
-                height: 36px;
+                height: 30px;
                 opacity: 1;
             }
 
@@ -118,6 +141,7 @@
 
             &__status {
                 margin-top: -2px;
+                pointer-events: all;
             }
 
             &__title {
@@ -138,15 +162,6 @@
 
             &:after {
                 content: '\f107';
-                font-family: FontAwesome;
-                width: 15px;
-                height: 15px;
-                position: absolute;
-                left: 50%;
-                bottom: 0%;
-                opacity: 0;
-                transition: 300ms;
-                transform: translate(-25%);
             }
 
             &:hover {
@@ -154,8 +169,6 @@
 
                 &:after {
                     bottom: -13%;
-                    opacity: 1;
-                    transition: 300ms;
                 }
             }
         }
@@ -164,40 +177,26 @@
             position: relative;
             background-color: fade(black, 15%);
 
-            h1 {
-                width: calc(100% - 240px);
-                line-break: anywhere;
+            &__title {
+                width: calc(100% - 260px);
                 margin: 0px;
-                padding: 0.67em 0px;
+                padding: 0.67em 20px;
+                font-size: 1.5em;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
 
             &.enter-done, &.enter-active {
-                height: 300px;
+                height: 140px;
                 opacity: 1;
+                border-top: 2px solid @theme0;
             }
 
             &, &.exit-done, &.exit-active {
                 height: 0px;
                 opacity: 0;
-            }
-
-            &__close {
-                .small-heading();
-
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 100%;
-                height: 20px;
-                font-family: FontAwesome;
-                font-size: 18px;
-
-                &:hover {
-                    background-color: fade(@theme4, 5%);
-                }
+                border-top: 0px solid @theme0;
             }
 
             &__actions {
@@ -223,6 +222,19 @@
 
                 position: relative;
                 width: 200px;
+                pointer-events: all;
+            }
+
+            &:after {
+                content: '\f106';
+            }
+
+            &:hover {
+                background-color: fade(@theme1, 30%);
+
+                &:after {
+                    bottom: -2%;
+                }
             }
         }
     }
