@@ -82,13 +82,13 @@ const AddonManager = ({ addons, appMain, removeAddon, setAddons, setAddon, wowPa
     const sortedAddons = useMemo(() => {
         return _.orderBy(addons, [addon => addon.status > 0, 'name'], ['desc', 'asc']);
     }, [addons]);
+
     const resync = useCallback(refresh => {
         api.addons.getInstalledAddons(wowPath, refresh).then(setAddons);
     }, [wowPath]);
     const checkForUpdate = useCallback(() => {
         api.addons.checkForAddonUpdates().then(setAddons);
     });
-
     const updateAddon = useCallback(addon => {
         api.addons.updateAddon(addon, wowPath)
             .on('update', payload => setAddon(addon.id, payload))
@@ -154,9 +154,9 @@ const mapStateToProps = state => ({
     wowPath: state.wowClient.paths[state.wowClient.version]
 });
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = dispatch => {
     return bindActionCreators({ removeAddon, setAddons, setAddon }, dispatch);
-}
+};
 
 AddonRow.propTypes = {
     addon: PropTypes.object,
