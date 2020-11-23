@@ -16,6 +16,7 @@ message Addons {
         repeated Folder folders = 7;
         int32 releaseType = 8;
         string version = 9;
+        string gameVersion = 10;
     }
 
     repeated Addon addons = 1;

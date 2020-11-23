@@ -54,7 +54,7 @@ function checkForUpdates(ev) {
         ev.sender.send('progress_end');
         const allUpdates = _.assign({}, ..._.values(result));
         _.forEach(addons, addon => {
-            addon.setStatus(allUpdates[addon.id] ? ADDON_STATUS.UPDATE_AVAIL : ADDON_STATUS.OK);
+            addon.status = allUpdates[addon.id] ? ADDON_STATUS.UPDATE_AVAIL : ADDON_STATUS.OK;
         });
         return addons;
     });

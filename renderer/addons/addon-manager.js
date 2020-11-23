@@ -57,13 +57,13 @@ const AddonRow = ({ addon, onUpdate, onUninstall }) => {
                 <div className="addon-row" key={addon.id} data-type={addon.type} onClick={onToggleOpen}>
                     <span className="addon-row__status"><AddonStatus addon={addon} onClick={onStatusClick} /></span>
                     <span className="addon-row__title">{ addon.name }</span>
-                    <span className="addon-row__version" title={addon.version}>{ addon.version }</span>
+                    <span className="addon-row__version" title={addon.version}>{ addon.gameVersion }</span>
                     <span className="addon-row__authors">{ addon.authors.join(' ') }</span>
                 </div>
             </CSSTransition>
             <CSSTransition in={isOpen} timeout={200} mountOnEnter>
                 <div className="addon-large-row" key={addon.id} data-type={addon.type}>
-                    <h1 onClick={onToggleOpen}>{ addon.name } - { addon.version }</h1>
+                    <h1 onClick={onToggleOpen}>{ addon.name } - { addon.gameVersion }</h1>
                     <span>{ _.map(addon.authors, 'name').join(' ') }</span>
                     <div className="addon-large-row__actions">
                         <button className="addon-large-row__home" onClick={() => api.window.open(addon.url)}>
