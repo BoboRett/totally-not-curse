@@ -40,7 +40,8 @@ const headerStops = {
 
 const AddonRow = ({ addon, onUpdate, onUninstall }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const onToggleOpen = useCallback(() => {
+    const onToggleOpen = useCallback(ev => {
+        if(ev.target !== ev.currentTarget) return;
         setIsOpen(currentOpen => !currentOpen);
     }, []);
     const onStatusClick = useCallback(event => {
@@ -62,8 +63,8 @@ const AddonRow = ({ addon, onUpdate, onUninstall }) => {
                 </div>
             </CSSTransition>
             <CSSTransition in={isOpen} timeout={200} mountOnEnter>
-                <div className="addon-large-row" key={addon.id} data-type={addon.type}>
-                    <h1 onClick={onToggleOpen}>{ addon.name } - { addon.gameVersion }</h1>
+                <div className="addon-large-row" key={addon.id} data-type={addon.type} onClick={onToggleOpen}>
+                    <p className="addon-large-row__title" >{ addon.name } - { addon.gameVersion }</p>
                     <span>{ _.map(addon.authors, 'name').join(' ') }</span>
                     <div className="addon-large-row__actions">
                         <button className="addon-large-row__home" onClick={() => api.window.open(addon.url)}>
@@ -71,7 +72,6 @@ const AddonRow = ({ addon, onUpdate, onUninstall }) => {
                         </button>
                         <ConfirmButton className="addon-large-row__remove" onClick={onUninstallAddon}>Uninstall</ConfirmButton>
                     </div>
-                    <span className="addon-large-row__close" onClick={onToggleOpen}>{'\uf106'}</span>
                 </div>
             </CSSTransition>
         </>
