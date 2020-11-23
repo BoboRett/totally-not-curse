@@ -9,13 +9,17 @@ import AppSettings from './settings/app-settings';
 import ErrorDialog from './error-dialog/error-dialog';
 import NavMenu from './nav-menu/nav-menu';
 import ProgressBar from './progress-bar/progress-bar';
+import { setAddons } from './store/addons';
 import { setPaths } from './store/wow-client';
 import './app.less';
 import { Switch, Route } from 'react-router-dom';
 
-const App = ({ setPaths }) => {
+const App = ({ setAddons, setPaths }) => {
     useEffect(() => {
-        api.findWow().then(setPaths);
+        api.findWow().then(wowPaths => {
+            setPaths(wowPaths);
+            api.addons.getInstalledAddons(wowPaths.wow_retail).then(setAddons);
+        });
     }, []);
 
     const appMain = useRef(null);
@@ -44,11 +48,12 @@ const App = ({ setPaths }) => {
     );
 };
 
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ setPaths }, dispatch);
-}
+const mapDispatchToProps = dispatch => {
+    return bindActionCreators({ setAddons, setPaths }, dispatch);
+};
 
 App.propTypes = {
+    setAddons: PropTypes.func,
     setPaths: PropTypes.func
 };
 

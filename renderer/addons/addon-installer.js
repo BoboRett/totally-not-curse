@@ -93,9 +93,9 @@ const mapStateToProps = state => ({
 });
 
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = dispatch => {
     return bindActionCreators({ addAddons }, dispatch);
-}
+};
 
 AddonInstaller.propTypes = {
     addAddons: PropTypes.func,
