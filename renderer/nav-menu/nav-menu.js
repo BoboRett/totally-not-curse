@@ -1,10 +1,12 @@
 /* eslint-disable react/no-children-prop */
+import { connect } from 'react-redux';
 import { NavLink, Route } from "react-router-dom";
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import './nav-menu.less';
 
-const NavMenu = () => {
+const NavMenu = ({ updateAvailable }) => {
     return (
         <div className="nav-menu">
             <NavLink to="/addons">Addons</NavLink>
@@ -36,9 +38,17 @@ const NavMenu = () => {
                     <NavLink to="/settings/dirs">Directories</NavLink>
                 </div>
             )} />
-            <NavLink to="/settings">Settings</NavLink>
+            <NavLink to="/settings" className={updateAvailable ? 'notify' : ''}>Settings</NavLink>
         </div>
     );
 };
 
-export default NavMenu;
+const mapStateToProps = state => ({
+    updateAvailable: state.app.updateAvailable
+});
+
+NavMenu.propTypes = {
+    updateAvailable: PropTypes.bool
+};
+
+export default connect(mapStateToProps)(NavMenu);
