@@ -15,38 +15,7 @@
     }
 
     &__entry {
-        display: flex;
-        min-height: 24px;
-        width: 100%;
-        margin: 12px 0px;
-        align-items: flex-end;
-        justify-content: center;
-        border-bottom: 2px solid fade(@theme4, 10%);
-
-        &-heading {
-            .small-heading();
-
-            flex-grow: 1;
-        }
-
-        &-value {
-            &_button {
-                .base-button();
-
-                margin: 0px auto;
-            }
-
-            &_checkbox {
-                .base-checkbox();
-
-                margin: 2px;
-            }
-
-            &_text {
-                .base-heading();
-            }
-
-        }
+        .wide-detail-row();
     }
 
     &__heading {
