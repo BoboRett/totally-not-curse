@@ -5,10 +5,7 @@ const _ = require('lodash');
 const { shell } = require('electron');
 
 class Addon {
-    constructor(type, name, id, folders, releaseType, version, summary, url, authors) {
-        if(new.target === Addon) {
-            throw new TypeError('Cannot construct Abstract instance');
-        }
+    constructor(type, name, id, folders, releaseType, version, gameVersion, summary, url, authors) {
         this.type = type;
         this.name = name;
         this.id = id;
@@ -16,8 +13,24 @@ class Addon {
         this.authors = authors || [];
         this.summary = summary || '';
         this.url = url || '';
-        this.setReleaseType(releaseType || ADDON_RELEASE_TYPE.STABLE);
-        this.setVersion(version || '1.0.0');
+        this.releaseType = releaseType || ADDON_RELEASE_TYPE.STABLE;
+        this.version = version || '1.0.0';
+        this.gameVersion = gameVersion;
+    }
+
+    static fromState(state) {
+        return new Addon(
+            state.type,
+            state.name,
+            state.id,
+            state.folders,
+            state.releaseType,
+            state.version,
+            state.gameVersion,
+            state.summary,
+            state.url,
+            state.authors
+        );
     }
 
     removeFiles(basePath) {
@@ -34,18 +47,6 @@ class Addon {
             .pipe(unzipper.Extract({ path: addonPath }))
             .promise()
         ;
-    }
-
-    setReleaseType(releaseType) {
-        this.releaseType = releaseType;
-    }
-
-    setStatus(status) {
-        this.status = status;
-    }
-
-    setVersion(version) {
-        this.version = version;
     }
 
     uninstall(wowPath) {

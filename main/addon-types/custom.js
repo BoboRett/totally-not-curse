@@ -21,23 +21,12 @@ class CustomAddon extends Addon {
                 [{ foldername: dir }],
                 ADDON_RELEASE_TYPE.STABLE,
                 '-',
+                'custom',
                 'Custom addon'
             );
             addon.url = path.join(wowPath, 'Interface/addons', dir);
             matches.matched.push(addon);
         }, { matched: [], unmatched: [] });
-    }
-
-    static fromState(state) {
-        return new CustomAddon(
-            state.name,
-            state.id,
-            state.folders,
-            state.releaseType,
-            state.version,
-            state.summary,
-            state.url
-        );
     }
 
     update() {

@@ -54,19 +54,6 @@ class CurseAddon extends Addon {
         }, { matched: [], unmatched: [] });
     }
 
-    static fromState(state) {
-        return new CurseAddon(
-            state.name,
-            state.id,
-            state.folders,
-            state.releaseType,
-            state.version,
-            state.summary,
-            state.url,
-            state.authors
-        );
-    }
-
     static async getDetailsFromUrl(url) {
         const addonId = url.searchParams.get('addonId');
         const fileId = url.searchParams.get('fileId');
@@ -92,6 +79,7 @@ class CurseAddon extends Addon {
         addon.authors = _.map(addonInfo.authors, 'name');
         addon.folders = manifest.modules;
         addon.version = manifest.displayName;
+        addon.gameVersion = manifest.gameVersion[0];
         addon.releaseType = manifest.releaseType;
         addon.summary = addonInfo.summary;
         addon.url = addonInfo.websiteUrl;
@@ -118,7 +106,7 @@ class CurseAddon extends Addon {
         targetFile = targetFile  || (await curse.getLatestFile(this.id, this.releaseType)).id;
         return CurseAddon.install(sender, wowPath, this.id, targetFile, true)
             .then(updated => {
-                updated[0].setStatus(ADDON_STATUS.UPDATE_COMPLETE);
+                updated[0].status = ADDON_STATUS.UPDATE_COMPLETE;
                 sender.send(addonId, updated[0]);
             })
             .catch(err => {
@@ -160,7 +148,8 @@ async function hydrateMatches(matchByDir) {
             match.id,
             match.file.modules,
             match.file.releaseType,
-            match.file.displayName
+            match.file.displayName,
+            match.file.gameVersion[0]
         );
         const foundAddon = foundAddons[match.id];
         if(foundAddon) {
