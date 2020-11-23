@@ -54,6 +54,20 @@ class CurseAddon extends Addon {
         }, { matched: [], unmatched: [] });
     }
 
+    static fromState(state) {
+        return new CurseAddon(
+            state.name,
+            state.id,
+            state.folders,
+            state.releaseType,
+            state.version,
+            state.gameVersion,
+            state.summary,
+            state.url,
+            state.authors
+        );
+    }
+
     static async getDetailsFromUrl(url) {
         const addonId = url.searchParams.get('addonId');
         const fileId = url.searchParams.get('fileId');

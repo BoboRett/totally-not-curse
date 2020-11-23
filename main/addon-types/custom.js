@@ -29,6 +29,20 @@ class CustomAddon extends Addon {
         }, { matched: [], unmatched: [] });
     }
 
+    static fromState(state) {
+        return new CustomAddon(
+            state.name,
+            state.id,
+            state.folders,
+            state.releaseType,
+            state.version,
+            state.gameVersion,
+            state.summary,
+            state.url,
+            state.authors
+        );
+    }
+
     update() {
         throw new Error('Attempting to update custom addon');
     }
