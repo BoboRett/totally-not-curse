@@ -43,6 +43,9 @@ const AppUpdater = () => {
             setAllowPrerelease(_.get(version, 'prerelease', []).length > 0);
         });
     }, []);
+    useEffect(() => {
+        checkForUpdates();
+    }, [allowPrerelease]);
 
     const buttonText = useMemo(() => (
         (isUpdateReady && 'Install update') ||

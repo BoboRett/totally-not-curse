@@ -10,15 +10,26 @@ import ErrorDialog from './error-dialog/error-dialog';
 import NavMenu from './nav-menu/nav-menu';
 import ProgressBar from './progress-bar/progress-bar';
 import { setAddons } from './store/addons';
+import { setUpdateAvailable } from './store/app';
 import { setPaths } from './store/wow-client';
 import './app.less';
 import { Switch, Route } from 'react-router-dom';
 
-const App = ({ setAddons, setPaths }) => {
+const App = ({ setAddons, setPaths, setUpdateAvailable }) => {
     useEffect(() => {
         api.findWow().then(wowPaths => {
             setPaths(wowPaths);
             api.addons.getInstalledAddons(wowPaths.wow_retail).then(setAddons);
+        });
+    }, []);
+    useEffect(() => {
+        api.app.updates.getAppVersion().then(version => {
+            const allowPrerelease = _.get(version, 'prerelease', []).length > 0;
+            api.app.updates.checkForAppUpdate(allowPrerelease)
+                .then(updateInfo => {
+                    setUpdateAvailable(_.has(updateInfo, 'downloadPromise'));
+                })
+            ;
         });
     }, []);
 
@@ -49,12 +60,13 @@ const App = ({ setAddons, setPaths }) => {
 };
 
 const mapDispatchToProps = dispatch => {
-    return bindActionCreators({ setAddons, setPaths }, dispatch);
+    return bindActionCreators({ setAddons, setPaths, setUpdateAvailable }, dispatch);
 };
 
 App.propTypes = {
     setAddons: PropTypes.func,
-    setPaths: PropTypes.func
+    setPaths: PropTypes.func,
+    setUpdateAvailable: PropTypes.func
 };
 
 export default connect(null, mapDispatchToProps)(App);
