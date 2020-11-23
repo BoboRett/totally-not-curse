@@ -63,12 +63,20 @@ const AddonInstaller = ({ wowPath, addAddons }) => {
                     onChange={ev => setUrl(ev.target.value)}
                 />
             </label>
-            <pre className="addon-installer__details">
-                { addon.name }
-                {'\n'}
-                { _.map(addon.authors, 'name').join('  -  ') }
-                { _.map(addon.dependencies, 'name') }
-            </pre>
+            <div className="addon-installer__details">
+                <p className="addon-installer__entry">
+                    <span className="addon-installer__entry-heading">Name</span>
+                    <span className="addon-installer__entry-value_text">{ addon.name }</span>
+                </p>
+                <p className="addon-installer__entry" id="authors">
+                    <span className="addon-installer__entry-heading">Authors</span>
+                    <span className="addon-installer__entry-value_text">{ _.map(addon.authors, 'name').join('  -  ') }</span>
+                </p>
+                <p className="addon-installer__entry">
+                    <span className="addon-installer__entry-heading">Dependencies</span>
+                    <span className="addon-installer__entry-value_text">{ _.map(addon.dependencies, 'name') }</span>
+                </p>
+            </div>
             <button
                 className="addon-installer__install"
                 disabled={!canInstallAddon}
