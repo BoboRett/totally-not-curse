@@ -4,6 +4,7 @@ const EventEmitter = require('events');
 contextBridge.exposeInMainWorld('api', {
     // window
     window: {
+        browseOpen: options => renderer.invoke('browseOpen', options),
         closeWindow: () => renderer.invoke('close'),
         minimiseWindow: () => renderer.invoke('minimise'),
         fullscreenWindow: () => renderer.invoke('toggleFullscreen'),
