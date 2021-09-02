@@ -9,34 +9,6 @@ import ConfirmButton from '../components/confirm-button';
 import { removeAddon, setAddons, setAddon } from '../store/addons';
 import { ADDON_STATUS, ADDON_TYPE } from '../../utils/constants';
 import './addon-manager.less';
-import Transitioner from '../transitioner/transitioner';
-
-const headerStops = {
-    0: {
-        main: {
-            minHeight: 164,
-            background: 'linear-gradient(-45deg, rgb(33, 33, 33), rgb(8, 14, 12)) fixed'
-        },
-        controls: {
-            left: 10
-        },
-        count: {
-            opacity: 1
-        }
-    },
-    100: {
-        main: {
-            minHeight: 65,
-            background: 'linear-gradient(-45deg, rgb(27, 27, 27), rgb(7, 12, 11)) fixed'
-        },
-        controls: {
-            left: 2
-        },
-        count: {
-            opacity: 0
-        }
-    }
-};
 
 const AddonRow = ({ addon, onUpdate, onUninstall }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -78,7 +50,7 @@ const AddonRow = ({ addon, onUpdate, onUninstall }) => {
     );
 };
 
-const AddonManager = ({ addons, appMain, removeAddon, setAddons, setAddon, wowPath }) => {
+const AddonManager = ({ addons, removeAddon, setAddons, setAddon, wowPath }) => {
     const sortedAddons = useMemo(() => {
         return _.orderBy(addons, [addon => addon.status > 0, 'name'], ['desc', 'asc']);
     }, [addons]);
@@ -111,24 +83,16 @@ const AddonManager = ({ addons, appMain, removeAddon, setAddons, setAddon, wowPa
 
     return (
         <div className="addon-manager">
-            <Transitioner scrollParent={appMain} stops={headerStops}>
-                {(styles, alpha) => (
-                    <div className={`addon-manager__header ${alpha >= 1 ? 'addon-manager__header_collapsed' : ''}`} style={styles.main}>
-                        <div className="addon-manager__controls" style={styles.controls}>
-                            <button id="resync" onClick={ev => ev.shiftKey ? resync(true) : checkForUpdate()}>
-                                { alpha < 1 && 'Check for updates' }
-                            </button>
-                            <button id="download-all" onClick={updateAll}>
-                                { alpha < 1 && 'Update all' }
-                            </button>
-                        </div>
-                        <span
-                            className="addon-manager__count"
-                            style={styles.count}
-                        >{ addons.length }</span>
-                    </div>
-                )}
-            </Transitioner>
+            <div className="addon-manager__header">
+                <div className="addon-manager__controls">
+                    <button id="resync" onClick={ev => ev.shiftKey ? resync(true) : checkForUpdate()}>
+                        Check for updates
+                    </button>
+                    <button id="download-all" onClick={updateAll}>
+                        Update all
+                    </button>
+                </div>
+            </div>
             <div className="addon-manager__table">
                 <div className="addon-manager__table-head">
                     <span>Status</span>

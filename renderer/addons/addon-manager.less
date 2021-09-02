@@ -1,54 +1,29 @@
 @import (reference) '../variables.less';
 
 .addon-manager {
-    padding-top: 164px;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
 
-    &__count {
-        position: absolute;
-        right: 0px;
-        top: -30px;
-        font-family: Heebo;
-        font-size: 96px;
-        font-weight: bold;
-        color: lighten(@theme0, 5%);
-    }
-
     &__controls {
-        -webkit-app-region: no-drag;
-        position: absolute;
-        bottom: 12px;
         display: flex;
-
-        > * {
-            margin-right: 2px;
-        }
+        max-width: @max-content-width;
+        margin: auto;
     }
 
     &__header {
         -webkit-app-region: drag;
-        position: fixed;
         top: @titlebar-height;
-        width: calc(100% - @navbar-width - @scrollbar-width);
-        z-index: 2;
-        overflow: hidden;
+        flex-shrink: 0;
+        background: linear-gradient(-45deg, rgb(27, 27, 27), rgb(7, 12, 11)) fixed;
 
         button {
             .base-button();
 
+            margin-right: 2px;
             height: 40px;
             width: 200px;
-            overflow: hidden;
-            white-space: nowrap;
             font-size: 14px;
-        }
-
-        &_collapsed {
-            button {
-                width: 40px;
-            }
         }
 
         #resync:before {
@@ -68,6 +43,7 @@
         margin: 0 auto;
         width: 100%;
         max-width: @max-content-width;
+        overflow: auto;
 
         &-head, .addon-row {
             display: grid;
@@ -79,7 +55,7 @@
 
             position: sticky;
             z-index: 1;
-            top: 65px;
+            top: 0px;
             padding-top: 8px;
             background: linear-gradient(-45deg, rgb(33, 33, 33), rgb(8, 14, 12)) fixed;
             text-align: center;
