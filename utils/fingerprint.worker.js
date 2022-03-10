@@ -34,6 +34,7 @@ function lengthWithoutWhitespace(buffer) {
 function getFileHash(filePath, ignoreWhitespace) {
     return readFileAsync(filePath)
         .then(content => getHash(content, undefined, ignoreWhitespace))
+        .catch(() => '')
     ;
 }
 
@@ -97,6 +98,7 @@ function getIncludes(indexFile, matchingFiles) {
     }
     matchingFiles.push(indexFile);
     return readFileAsync(indexFile, 'utf8')
+        .catch(() => '')
         .then(content => {
             let includes = null;
             if(indexFile.toLowerCase().endsWith('.toc')) {
