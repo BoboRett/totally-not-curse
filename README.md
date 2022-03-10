@@ -10,10 +10,6 @@ Hub for:
     - Keeping them up to date
     - (WIP) Installing from various sources (curse, tukui, git)
     - (WIP) Backing up addons/settings
-- (WIP) Managing WeakAuras
-- Handling combat logs:
-    - (WIP) Directory management
-    - (WIP) Uploading to warcraft logs
 
 This is just a pet project that is tested to the best of my ability. All risks associated with downloading some random piece of software off the internet stand (see [License](#License)).
 
