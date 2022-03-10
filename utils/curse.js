@@ -78,7 +78,7 @@ function getLatestFile(addonId, releaseType = ADDON_RELEASE_TYPE.STABLE) {
         .then(curseAddon => {
             return _.find(curseAddon.latestFiles, file => (
                 file.releaseType === releaseType
-                    && file.gameVersionFlavor === 'wow_retail'
+                    && _.some(file.sortableGameVersion, { gameVersionTypeId: 517 })
             ));
         })
     ;

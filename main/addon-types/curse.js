@@ -24,7 +24,7 @@ class CurseAddon extends Addon {
                         return !_.some(
                             curseAddon.latestFiles,
                             file => file.releaseType === addon.releaseType
-                                && file.gameVersionFlavor === 'wow_retail'
+                                && _.some(file.sortableGameVersion, { gameVersionTypeId: 517 })
                                 && _.every(file.modules, module => _.find(addon.folders, { fingerprint: module.fingerprint }))
                         );
                     }
@@ -93,7 +93,7 @@ class CurseAddon extends Addon {
         addon.authors = _.map(addonInfo.authors, 'name');
         addon.folders = manifest.modules;
         addon.version = manifest.displayName;
-        addon.gameVersion = manifest.gameVersion[0];
+        addon.gameVersion = _.find(manifest.sortableGameVersion, { gameVersionTypeId: 517 }).gameVersionName;
         addon.releaseType = manifest.releaseType;
         addon.summary = addonInfo.summary;
         addon.url = addonInfo.websiteUrl;
@@ -117,8 +117,12 @@ class CurseAddon extends Addon {
     async update(wowPath, targetFile, sender) {
         const addonId = _.toString(this.id);
         sender.send(addonId, { status: ADDON_STATUS.UPDATE_PROG });
-        targetFile = targetFile  || (await curse.getLatestFile(this.id, this.releaseType)).id;
-        return CurseAddon.install(sender, wowPath, this.id, targetFile, true)
+        const getFile = targetFile
+            ? Promise.resolve(targetFile)
+            : curse.getLatestFile(this.id, this.releaseType).then(file => file.id)
+        ;
+        return getFile
+            .then(fileId => CurseAddon.install(sender, wowPath, this.id, fileId, true))
             .then(updated => {
                 updated[0].status = ADDON_STATUS.UPDATE_COMPLETE;
                 sender.send(addonId, updated[0]);
@@ -163,7 +167,7 @@ async function hydrateMatches(matchByDir) {
             match.file.modules,
             match.file.releaseType,
             match.file.displayName,
-            match.file.gameVersion[0]
+            _.find(match.file.sortableGameVersion, { gameVersionTypeId: 517 }).gameVersionName
         );
         const foundAddon = foundAddons[match.id];
         if(foundAddon) {
